@@ -73,9 +73,9 @@ public class driveSubsystem extends SubsystemBase {
 
     // Native scale is RPM. Scale velocity so that it is in meters/sec
     m_leftEncoder.setVelocityConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters * DriveConstants.kGearReduction / 60.0);
+        DriveConstants.kDistancePerWheelRevolutionMeters / (DriveConstants.kGearReduction * 60.0));
     m_rightEncoder.setVelocityConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters * DriveConstants.kGearReduction / 60.0);
+        DriveConstants.kDistancePerWheelRevolutionMeters / (DriveConstants.kGearReduction * 60.0));
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -90,21 +90,21 @@ public class driveSubsystem extends SubsystemBase {
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_leftEncoder.getPosition(),
         m_rightEncoder.getPosition());
 
-    //SmartDashboard.putBoolean("IMU_Connected", m_gyro.isConnected());
-    //SmartDashboard.putBoolean("IMU_IsCalibrating", m_gyro.isCalibrating());
+  
+    // log drive train and data to Smartdashboard
     SmartDashboard.putNumber("IMU_Yaw", m_gyro.getYaw());
-    //SmartDashboard.putNumber("IMU_Pitch", m_gyro.getPitch());
-    //SmartDashboard.putNumber("IMU_Roll", m_gyro.getRoll());
+
 
     /* Display 9-axis Heading (requires magnetometer calibration to be useful) */
-    //SmartDashboard.putNumber("IMU_CompassHeading", m_gyro.getCompassHeading());
     SmartDashboard.putNumber("IMU_FusedHeading", m_gyro.getFusedHeading());
 
     /* These functions are compatible w/the WPI Gyro Class, providing a simple */
     /* path for upgrading from the Kit-of-Parts gyro to the navx-MXP */
-
     //SmartDashboard.putNumber("IMU_TotalYaw", m_gyro.getAngle());
     //SmartDashboard.putNumber("IMU_YawRateDPS", m_gyro.getRate());
+
+    SmartDashboard.putNumber("left_wheel_Velocity", m_leftEncoder.getVelocity());
+    SmartDashboard.putNumber("right_wheel_Velocity", m_rightEncoder.getVelocity());
 
   }
 
@@ -132,7 +132,10 @@ public class driveSubsystem extends SubsystemBase {
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(m_leftEncoder.getVelocity(),
+    // TODO: makde sure encoder scaling works and we don't have to calculate it here
+    // leftMaster.getEncoder().getVelocity() / kGearRatio * 2 * Math.PI * Units.inchesToMeters(kWheelRadiusInches) / 60,
+    return new DifferentialDriveWheelSpeeds(
+        m_leftEncoder.getVelocity(),
         m_rightEncoder.getVelocity());
   }
 
