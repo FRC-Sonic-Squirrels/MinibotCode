@@ -7,6 +7,10 @@
 
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.DriveConstants.kaVoltSecondsSquaredPerMeter;
+import static frc.robot.Constants.DriveConstants.ksVolts;
+import static frc.robot.Constants.DriveConstants.kvVoltSecondsPerMeter;
+import static frc.robot.Constants.DriveConstants.kPDriveVel;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -14,6 +18,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.EncoderType;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -21,6 +26,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants.DriveConstants;
 
@@ -35,9 +41,14 @@ public class driveSubsystem extends SubsystemBase {
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
   private final CANEncoder m_leftEncoder = m_leftNEO.getEncoder(EncoderType.kQuadrature, 4096);
   private final CANEncoder m_rightEncoder = m_rightNEO.getEncoder(EncoderType.kQuadrature, 4096);
+  private final SimpleMotorFeedforward  m_feedforward = 
+      new SimpleMotorFeedforward(ksVolts, kvVoltSecondsPerMeter, kaVoltSecondsSquaredPerMeter);
+
+  private PIDController left_PIDController = new PIDController(kPDriveVel, 0.0, 0.0);
+  private PIDController right_PIDController =  new PIDController(kPDriveVel, 0.0, 0.0);
 
   // The gyro sensor
-  //private final Gyro m_gyro = new ADXRS450_Gyro();
+  // private final Gyro m_gyro = new ADXRS450_Gyro();
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   // Odometry class for tracking robot pose
@@ -107,6 +118,15 @@ public class driveSubsystem extends SubsystemBase {
   }
 
   /**
+   * Returns the Feedforward settings for the drivetrain.
+   * 
+   * @return Feedforward
+   */
+  public SimpleMotorFeedforward getFeedforward() {
+    return m_feedforward;
+  }
+
+  /**
    * Returns the current wheel speeds of the robot.
    *
    * @return The current wheel speeds.
@@ -114,6 +134,24 @@ public class driveSubsystem extends SubsystemBase {
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(m_leftEncoder.getVelocity(),
         m_rightEncoder.getVelocity());
+  }
+
+  /**
+   * Returns the left PIDController object
+   *
+   * @return PIDController
+   */
+  public PIDController getLeftPidController() {
+    return left_PIDController;
+  }
+
+  /**
+   * Returns the right PIDController object
+   *
+   * @return PIDController
+   */
+  public PIDController getRightPidController() {
+    return right_PIDController;
   }
 
   /**

@@ -5,6 +5,19 @@
 /* the project. */
 /*----------------------------------------------------------------------------*/
 
+/**
+ * 
+ * Ramsete example code adapted to use NEO motors.
+ * 
+ * Code adapted from WPILib Example:
+ *  https://github.com/wpilibsuite/allwpilib/blob/master/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/ramsetecommand/
+ * With some modifications from:
+ *  https://github.com/prateekma/2019P2PWorkshop
+ * Also see this example:
+ *   https://github.com/JimWright4089/FIRSTRobots/blob/master/Code/TWambat/ramsetecommand/
+ */
+
+
 package frc.robot;
 
 import static frc.robot.Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared;
@@ -12,17 +25,11 @@ import static frc.robot.Constants.AutoConstants.kMaxSpeedMetersPerSecond;
 import static frc.robot.Constants.AutoConstants.kRamseteB;
 import static frc.robot.Constants.AutoConstants.kRamseteZeta;
 import static frc.robot.Constants.DriveConstants.kDriveKinematics;
-import static frc.robot.Constants.DriveConstants.kPDriveVel;
-import static frc.robot.Constants.DriveConstants.kaVoltSecondsSquaredPerMeter;
-import static frc.robot.Constants.DriveConstants.ksVolts;
-import static frc.robot.Constants.DriveConstants.kvVoltSecondsPerMeter;
 import java.util.List;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -104,9 +111,7 @@ public class RobotContainer {
     TrajectoryConfig config;
   
     // Create a voltage constraint to ensure we don't accelerate too fast
-    autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
-        new SimpleMotorFeedforward(ksVolts, kvVoltSecondsPerMeter, kaVoltSecondsSquaredPerMeter),
-        kDriveKinematics, 10);
+    autoVoltageConstraint = new DifferentialDriveVoltageConstraint(m_drive.getFeedforward(), kDriveKinematics, 10);
 
     // Create config for trajectory
     config = new TrajectoryConfig(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared)
@@ -129,14 +134,16 @@ public class RobotContainer {
         config);
 
     RamseteCommand ramseteCommand =
-        new RamseteCommand(exampleTrajectory, m_drive::getPose,
+        new RamseteCommand(exampleTrajectory, 
+            m_drive::getPose,
             new RamseteController(kRamseteB, kRamseteZeta),
-            new SimpleMotorFeedforward(ksVolts, kvVoltSecondsPerMeter,
-                kaVoltSecondsSquaredPerMeter),
-            kDriveKinematics, m_drive::getWheelSpeeds, new PIDController(kPDriveVel, 0.0, 0.0),
-            new PIDController(kPDriveVel, 0.0, 0.0),
-            // RamseteCommand passes volts to the callback
-            m_drive::tankDriveVolts, m_drive);
+            m_drive.getFeedforward(),
+            kDriveKinematics,
+            m_drive::getWheelSpeeds,
+            m_drive.getLeftPidController(),
+            m_drive.getRightPidController(),
+            m_drive::tankDriveVolts,
+            m_drive);
 
     var dt = (System.nanoTime() - initalTime) / 1E6;
     System.out.println("RamseteCommand generation time: " + dt + "ms");
