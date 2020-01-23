@@ -64,12 +64,12 @@ public class driveSubsystem extends SubsystemBase {
     m_leftNEO.restoreFactoryDefaults();
     m_rightNEO.restoreFactoryDefaults();
 
-    // set scaling factor for CANEncoder.getPossition() so that it matches the output of
+    // set scaling factor for CANEncoder.getPosition() so that it matches the output of
     // Encoder.getDistance() method.
     m_leftEncoder.setPositionConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters * DriveConstants.kGearReduction);
+        DriveConstants.kDistancePerWheelRevolutionMeters / DriveConstants.kGearReduction);
     m_rightEncoder.setPositionConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters * DriveConstants.kGearReduction);
+        DriveConstants.kDistancePerWheelRevolutionMeters / DriveConstants.kGearReduction);
 
     // Native scale is RPM. Scale velocity so that it is in meters/sec
     m_leftEncoder.setVelocityConversionFactor(
