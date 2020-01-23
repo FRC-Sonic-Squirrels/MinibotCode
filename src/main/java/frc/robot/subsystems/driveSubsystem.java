@@ -132,8 +132,7 @@ public class driveSubsystem extends SubsystemBase {
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    // TODO: makde sure encoder scaling works and we don't have to calculate it here
-    // leftMaster.getEncoder().getVelocity() / kGearRatio * 2 * Math.PI * Units.inchesToMeters(kWheelRadiusInches) / 60,
+    // TODO: make sure encoder scaling works and we don't have to calculate it here
     return new DifferentialDriveWheelSpeeds(
         m_leftEncoder.getVelocity(),
         m_rightEncoder.getVelocity());
