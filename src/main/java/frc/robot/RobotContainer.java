@@ -102,16 +102,16 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public Command getNoAutonomousCommand() {
     return new RunCommand(() -> m_drive.tankDriveVolts(0, 0));
   }
 
-  public Command broken_getAutonomousCommand() {
+  public Command getAutonomousCommand() {
     DifferentialDriveVoltageConstraint autoVoltageConstraint;
     TrajectoryConfig config;
   
     // Create a voltage constraint to ensure we don't accelerate too fast
-    autoVoltageConstraint = new DifferentialDriveVoltageConstraint(m_drive.getFeedforward(), kDriveKinematics, 10);
+    autoVoltageConstraint = new DifferentialDriveVoltageConstraint(m_drive.getFeedforward(), kDriveKinematics, 6);
 
     // Create config for trajectory
     config = new TrajectoryConfig(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared)
@@ -127,9 +127,9 @@ public class RobotContainer {
         // Start at the origin facing the +X direction
         new Pose2d(0, 0, new Rotation2d(0)),
         // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+        List.of(new Translation2d(0.5, 0.5), new Translation2d(1.0, 0.0)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
+        new Pose2d(1.5, 0.5, new Rotation2d(0)),
         // Pass config
         config);
 

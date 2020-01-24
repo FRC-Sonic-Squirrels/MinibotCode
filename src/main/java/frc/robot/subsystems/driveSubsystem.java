@@ -37,10 +37,10 @@ public class driveSubsystem extends SubsystemBase {
   public static final CANSparkMax m_rightNEO =
       new CANSparkMax(DriveConstants.kRightNEO, MotorType.kBrushless);
   public static SpeedController m_leftMotors = new SpeedControllerGroup(m_leftNEO);;
-  public static SpeedController m_rightMotors = new SpeedControllerGroup(m_leftNEO);
+  public static SpeedController m_rightMotors = new SpeedControllerGroup(m_rightNEO);
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
-  private final CANEncoder m_leftEncoder = m_leftNEO.getEncoder(EncoderType.kQuadrature, 4096);
-  private final CANEncoder m_rightEncoder = m_rightNEO.getEncoder(EncoderType.kQuadrature, 4096);
+  private final CANEncoder m_leftEncoder = m_leftNEO.getEncoder(EncoderType.kHallSensor, 4096);
+  private final CANEncoder m_rightEncoder = m_rightNEO.getEncoder(EncoderType.kHallSensor, 4096);
   private final SimpleMotorFeedforward  m_feedforward = 
       new SimpleMotorFeedforward(ksVolts, kvVoltSecondsPerMeter, kaVoltSecondsSquaredPerMeter);
 
@@ -67,15 +67,15 @@ public class driveSubsystem extends SubsystemBase {
     // set scaling factor for CANEncoder.getPosition() so that it matches the output of
     // Encoder.getDistance() method.
     m_leftEncoder.setPositionConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / DriveConstants.kGearReduction);
+        DriveConstants.kDistancePerWheelRevolutionMeters / (4096 * DriveConstants.kGearReduction));
     m_rightEncoder.setPositionConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / DriveConstants.kGearReduction);
+        DriveConstants.kDistancePerWheelRevolutionMeters / (4096 * DriveConstants.kGearReduction));
 
     // Native scale is RPM. Scale velocity so that it is in meters/sec
     m_leftEncoder.setVelocityConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (DriveConstants.kGearReduction * 60.0));
+        DriveConstants.kDistancePerWheelRevolutionMeters / (4096 * DriveConstants.kGearReduction * 60.0));
     m_rightEncoder.setVelocityConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (DriveConstants.kGearReduction * 60.0));
+        DriveConstants.kDistancePerWheelRevolutionMeters / (4096 * DriveConstants.kGearReduction * 60.0));
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));

@@ -42,7 +42,7 @@ public final class Constants {
         public static final double kaVoltSecondsSquaredPerMeter = 0.486;
 
         // Determined using frc-characterization
-        public static final double kPDriveVel = 38.5;
+        public static final double kPDriveVel = .01; // 38.5
         public static final double kDDriveVel = 15.8;
 
         // SparkMax at 1ms update rate
@@ -64,8 +64,8 @@ public final class Constants {
                 (kWheelDiameterMeters * Math.PI * kGearReduction) / (double) kEncoderCPR;
 
         // https://docs.wpilib.org/en/latest/docs/software/trajectory-end-to-end/entering-constants.html#max-trajectory-velocity-acceleration
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+        //public static final double kMaxSpeedMetersPerSecond = .1;
+        //public static final double kMaxAccelerationMetersPerSecondSquared = .1;
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2;
@@ -78,8 +78,8 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+        public static final double kMaxSpeedMetersPerSecond = .25;
+        public static final double kMaxAccelerationMetersPerSecondSquared = .1;
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2;
