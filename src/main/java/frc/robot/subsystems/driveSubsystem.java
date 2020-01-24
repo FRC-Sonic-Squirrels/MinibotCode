@@ -67,15 +67,15 @@ public class driveSubsystem extends SubsystemBase {
     // set scaling factor for CANEncoder.getPosition() so that it matches the output of
     // Encoder.getDistance() method.
     m_leftEncoder.setPositionConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (4096 * DriveConstants.kGearReduction));
+        DriveConstants.kDistancePerWheelRevolutionMeters / (2048 * DriveConstants.kGearReduction));
     m_rightEncoder.setPositionConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (4096 * DriveConstants.kGearReduction));
+        DriveConstants.kDistancePerWheelRevolutionMeters / (2048 * DriveConstants.kGearReduction));
 
     // Native scale is RPM. Scale velocity so that it is in meters/sec
     m_leftEncoder.setVelocityConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (4096 * DriveConstants.kGearReduction * 60.0));
+        DriveConstants.kDistancePerWheelRevolutionMeters / (2048 * DriveConstants.kGearReduction * 60.0));
     m_rightEncoder.setVelocityConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (4096 * DriveConstants.kGearReduction * 60.0));
+        DriveConstants.kDistancePerWheelRevolutionMeters / (2048 * DriveConstants.kGearReduction * 60.0));
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
