@@ -11,6 +11,7 @@ import static frc.robot.Constants.DriveConstants.kaVoltSecondsSquaredPerMeter;
 import static frc.robot.Constants.DriveConstants.ksVolts;
 import static frc.robot.Constants.DriveConstants.kvVoltSecondsPerMeter;
 import static frc.robot.Constants.DriveConstants.kPDriveVel;
+import static frc.robot.Constants.DriveConstants.kEncoderCPR;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -39,8 +40,8 @@ public class driveSubsystem extends SubsystemBase {
   public static SpeedController m_leftMotors = new SpeedControllerGroup(m_leftNEO);;
   public static SpeedController m_rightMotors = new SpeedControllerGroup(m_rightNEO);
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
-  private final CANEncoder m_leftEncoder = m_leftNEO.getEncoder(EncoderType.kHallSensor, 4096);
-  private final CANEncoder m_rightEncoder = m_rightNEO.getEncoder(EncoderType.kHallSensor, 4096);
+  private final CANEncoder m_leftEncoder = m_leftNEO.getEncoder(EncoderType.kHallSensor, kEncoderCPR);
+  private final CANEncoder m_rightEncoder = m_rightNEO.getEncoder(EncoderType.kHallSensor, kEncoderCPR);
   private final SimpleMotorFeedforward  m_feedforward = 
       new SimpleMotorFeedforward(ksVolts, kvVoltSecondsPerMeter, kaVoltSecondsSquaredPerMeter);
 
@@ -67,15 +68,15 @@ public class driveSubsystem extends SubsystemBase {
     // set scaling factor for CANEncoder.getPosition() so that it matches the output of
     // Encoder.getDistance() method.
     m_leftEncoder.setPositionConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (2048 * DriveConstants.kGearReduction));
+        DriveConstants.kDistancePerWheelRevolutionMeters / (kEncoderCPR * DriveConstants.kGearReduction));
     m_rightEncoder.setPositionConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (2048 * DriveConstants.kGearReduction));
+        DriveConstants.kDistancePerWheelRevolutionMeters / (kEncoderCPR * DriveConstants.kGearReduction));
 
     // Native scale is RPM. Scale velocity so that it is in meters/sec
     m_leftEncoder.setVelocityConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (2048 * DriveConstants.kGearReduction * 60.0));
+        DriveConstants.kDistancePerWheelRevolutionMeters / (kEncoderCPR * DriveConstants.kGearReduction * 60.0));
     m_rightEncoder.setVelocityConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (2048 * DriveConstants.kGearReduction * 60.0));
+        DriveConstants.kDistancePerWheelRevolutionMeters / (kEncoderCPR * DriveConstants.kGearReduction * 60.0));
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -90,12 +91,10 @@ public class driveSubsystem extends SubsystemBase {
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_leftEncoder.getPosition(),
         m_rightEncoder.getPosition());
 
-  
     // log drive train and data to Smartdashboard
     SmartDashboard.putNumber("IMU_Yaw", m_gyro.getYaw());
     /* Display 9-axis Heading (requires magnetometer calibration to be useful) */
     SmartDashboard.putNumber("IMU_FusedHeading", m_gyro.getFusedHeading());
-
 
     // report the wheel speed, position, and pose
     SmartDashboard.putNumber("left_wheel_Velocity", m_leftEncoder.getVelocity());
