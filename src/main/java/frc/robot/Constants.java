@@ -62,11 +62,7 @@ public final class Constants {
 
         // Assumes the encoders are directly mounted on the motor shafts
         public static final double kEncoderDistancePerPulseMeters =
-                (kWheelDiameterMeters * Math.PI * kGearReduction) / (double) kEncoderCPR;
-
-        // https://docs.wpilib.org/en/latest/docs/software/trajectory-end-to-end/entering-constants.html#max-trajectory-velocity-acceleration
-        //public static final double kMaxSpeedMetersPerSecond = .1;
-        //public static final double kMaxAccelerationMetersPerSecondSquared = .1;
+                (kDistancePerWheelRevolutionMeters * kGearReduction) / (double) kEncoderCPR;
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2;
