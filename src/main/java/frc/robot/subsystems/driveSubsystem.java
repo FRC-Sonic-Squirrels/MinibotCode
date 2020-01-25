@@ -93,19 +93,21 @@ public class driveSubsystem extends SubsystemBase {
   
     // log drive train and data to Smartdashboard
     SmartDashboard.putNumber("IMU_Yaw", m_gyro.getYaw());
-
-
     /* Display 9-axis Heading (requires magnetometer calibration to be useful) */
     SmartDashboard.putNumber("IMU_FusedHeading", m_gyro.getFusedHeading());
 
-    /* These functions are compatible w/the WPI Gyro Class, providing a simple */
-    /* path for upgrading from the Kit-of-Parts gyro to the navx-MXP */
-    //SmartDashboard.putNumber("IMU_TotalYaw", m_gyro.getAngle());
-    //SmartDashboard.putNumber("IMU_YawRateDPS", m_gyro.getRate());
 
+    // report the wheel speed, position, and pose
     SmartDashboard.putNumber("left_wheel_Velocity", m_leftEncoder.getVelocity());
     SmartDashboard.putNumber("right_wheel_Velocity", m_rightEncoder.getVelocity());
 
+    SmartDashboard.putNumber("left_wheel_Distance", m_leftEncoder.getPosition());
+    SmartDashboard.putNumber("right_wheel_Distance", m_rightEncoder.getPosition());
+
+    Pose2d currentPose = m_odometry.getPoseMeters();
+    SmartDashboard.putNumber("pose_x",currentPose.getTranslation().getX());
+    SmartDashboard.putNumber("pose_y",currentPose.getTranslation().getY());
+    SmartDashboard.putNumber("pose_theta", currentPose.getRotation().getDegrees());
   }
 
   /**
