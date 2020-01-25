@@ -50,9 +50,10 @@ public final class Constants {
         // kDDriveVel = 2540.0 
 
         public static final int kEncoderCPR = 4096;
-        public static final double kWheelDiameterMeters = 0.1524;
 
-        // 6 inch (0.1524 meters) traction wheels circumference = 0.1524 * Math.PI;
+        // Aprox 6 inch (0.1524 meters) traction wheels, measured 0.15836 m 
+        // Measured circumference = 0.4975 m
+        public static final double kWheelDiameterMeters = 0.15836;
         public static final double kDistancePerWheelRevolutionMeters =
                 kWheelDiameterMeters * Math.PI;
 
