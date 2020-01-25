@@ -12,6 +12,8 @@ import static frc.robot.Constants.DriveConstants.ksVolts;
 import static frc.robot.Constants.DriveConstants.kvVoltSecondsPerMeter;
 import static frc.robot.Constants.DriveConstants.kPDriveVel;
 import static frc.robot.Constants.DriveConstants.kEncoderCPR;
+import static frc.robot.Constants.DriveConstants.kDistancePerWheelRevolutionMeters;
+import static frc.robot.Constants.DriveConstants.kGearReduction;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -68,15 +70,15 @@ public class driveSubsystem extends SubsystemBase {
     // set scaling factor for CANEncoder.getPosition() so that it matches the output of
     // Encoder.getDistance() method.
     m_leftEncoder.setPositionConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (kEncoderCPR * DriveConstants.kGearReduction));
+        kDistancePerWheelRevolutionMeters * kGearReduction / kEncoderCPR );
     m_rightEncoder.setPositionConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (kEncoderCPR * DriveConstants.kGearReduction));
+        kDistancePerWheelRevolutionMeters * kGearReduction / kEncoderCPR ));
 
     // Native scale is RPM. Scale velocity so that it is in meters/sec
     m_leftEncoder.setVelocityConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (kEncoderCPR * DriveConstants.kGearReduction * 60.0));
+        kDistancePerWheelRevolutionMeters * kGearReduction / (kEncoderCPR * 60.0));
     m_rightEncoder.setVelocityConversionFactor(
-        DriveConstants.kDistancePerWheelRevolutionMeters / (kEncoderCPR * DriveConstants.kGearReduction * 60.0));
+        kDistancePerWheelRevolutionMeters * kGearReduction / (kEncoderCPR * 60.0));
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
