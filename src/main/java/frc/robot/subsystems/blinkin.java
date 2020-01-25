@@ -35,6 +35,7 @@ public class blinkin extends SubsystemBase {
     m_blinkin = new Spark(pwmPort);
     solid_orange();
     limelightListener();
+    allianceColorListener();
   }
 
   /*
