@@ -14,6 +14,8 @@ import frc.robot.commands.driveCommand;
 import frc.robot.commands.limelightTurretVisionCommand;
 import frc.robot.subsystems.driveSubsystem;
 import frc.robot.subsystems.turretSubsystem;
+import frc.robot.subsystems.blinkin;
+import frc.robot.Constants.PWMPorts;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -28,7 +30,7 @@ public class RobotContainer {
   private final turretSubsystem m_turretSubsystem = new turretSubsystem();
   private final driveCommand m_driveCommand = new driveCommand(m_driveSubsystem);
   private final limelightTurretVisionCommand m_turretVisionCommand = new limelightTurretVisionCommand(m_turretSubsystem);
-
+  private final blinkin m_blinkin = new blinkin(PWMPorts.kBlinkin_1);
 
 
   /**

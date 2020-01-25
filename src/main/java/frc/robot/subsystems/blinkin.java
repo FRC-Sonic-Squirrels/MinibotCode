@@ -7,7 +7,9 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.TableEntryListener;
 import edu.wpi.first.wpilibj.Spark;
@@ -32,6 +34,7 @@ public class blinkin extends SubsystemBase {
   public blinkin(int pwmPort) {
     m_blinkin = new Spark(pwmPort);
     solid_orange();
+    limelightListener();
   }
 
   /*
@@ -49,8 +52,16 @@ public class blinkin extends SubsystemBase {
     }
   }
 
-  public void rainbow() {
-    set(-0.99);
+  public void solid_blue() {
+    set(0.87);
+  }
+
+  public void solid_red() {
+    set(0.61);
+  }
+
+  public void flashing_blue() {
+    set(-0.23);
   }
 
   public void solid_orange() {
@@ -61,41 +72,45 @@ public class blinkin extends SubsystemBase {
   * Add listeners to trigger on changes to the NetworkTable
   *
   * NetworkTable key for Alliance color:
-  *    FMSInfo -> IsRedAlliance -> value: boolean (True|False)
+  *    FMSInfo -> IsRedAlliance -> value: (True|False)
   *
   * NetworkTable for Limelight in valid target
-  *    limelight -> tv -> value: 0 or 1
+  *    limelight -> tv -> value: (0 | 1)  // On valid target
+  *    limelight -> ta -> value: (% of image on target)  
   *
   */
-  public void allianceColor() {
-    NetworkTable t = NetworkTableInstance.getDefault().getTable("FMSInfo");  
-    t.addEntryListener("IsRedAlliance", (table, key, entry, value, flags) -> {  
-      if (value.getBoolean() == true){
-        RobotContainer.m_blinkin.set(-0.01);
-        System.out.println("led RED");
-      } else {
-        RobotContainer.m_blinkin.set(0.19);
-        System.out.println("led BLUE");
-      }
-    }, TableEntryListener.kNew | TableEntryListener.kUpdate | TableEntryListener.kLocal);
     
-  }
-  
+  private void limelightListener() {
+     final NetworkTable tableLimelight = NetworkTableInstance.getDefault().getTable("limelight");
+    
+    /* Add listeners */
+    tableLimelight.addEntryListener("tv", (table, key, entry, value, flags) -> {
+        boolean targetValid = value.getBoolean();
+        if (targetValid == true) {
+          solid_blue();
+          System.out.println("LED Solid Blue");
+        } else {
+          solid_orange();
+          System.out.println("LED Solid Orange");
+        }
+    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
-  /**
-  private void allianceColor() {
-    final NetworkTableEntry tableAllianceColor = NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance");
-    tableAllianceColor.addListener(event -> {
-      System.out.println(event.value);
+    tableLimelight.addEntryListener("ta", (table, key, entry, value, flags) -> {
+        double targetArea = value.getDouble();
+    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+  }
+
+  private void allianceColorListener() {
+    NetworkTableEntry tableAllianceColor = NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance");
+      tableAllianceColor.addListener(event -> {
         if (event.value.getBoolean() == true){
-          RobotContainer.m_blinkin.set(-0.01);
+          solid_red();
           System.out.println("led RED"); 
         } else {
-          RobotContainer.m_blinkin.set(0.59);
+          solid_blue();;
           System.out.println("led BLUE");
         }
-    }, TableEntryListener.kNew | TableEntryListener.kUpdate);
+    }, TableEntryListener.kNew | TableEntryListener.kUpdate | TableEntryListener.kLocal) ;
   }
-  */
-  
+
 }

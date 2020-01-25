@@ -30,4 +30,7 @@ public static final class Manipulator {
     public static final int kTurretRotationsPerTick  = 1;
 
 }
+public static final class PWMPorts {
+    public static final int kBlinkin_1 = 0;
+}
 }
