@@ -72,7 +72,7 @@ public class driveSubsystem extends SubsystemBase {
     m_leftEncoder.setPositionConversionFactor(
         kDistancePerWheelRevolutionMeters * kGearReduction / kEncoderCPR );
     m_rightEncoder.setPositionConversionFactor(
-        kDistancePerWheelRevolutionMeters * kGearReduction / kEncoderCPR ));
+        kDistancePerWheelRevolutionMeters * kGearReduction / kEncoderCPR );
 
     // Native scale is RPM. Scale velocity so that it is in meters/sec
     m_leftEncoder.setVelocityConversionFactor(
