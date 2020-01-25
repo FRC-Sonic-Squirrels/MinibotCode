@@ -96,6 +96,7 @@ public class blinkin extends SubsystemBase {
         }
     }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
+    /* To be Used with future code */
     tableLimelight.addEntryListener("ta", (table, key, entry, value, flags) -> {
         double targetArea = value.getDouble();
     }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
@@ -113,5 +114,8 @@ public class blinkin extends SubsystemBase {
         }
     }, TableEntryListener.kNew | TableEntryListener.kUpdate | TableEntryListener.kLocal) ;
   }
+
+public void blinkin() {
+}
 
 }

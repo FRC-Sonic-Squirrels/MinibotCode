@@ -30,11 +30,10 @@ public class RobotContainer {
   private final turretSubsystem m_turretSubsystem = new turretSubsystem();
   private final driveCommand m_driveCommand = new driveCommand(m_driveSubsystem);
   private final limelightTurretVisionCommand m_turretVisionCommand = new limelightTurretVisionCommand(m_turretSubsystem);
-  private final blinkin m_blinkin = new blinkin(PWMPorts.kBlinkin_1);
-
+  private final static blinkin m_blinkin = new blinkin(PWMPorts.kBlinkin_1);
 
   /**
-   * The container for the robot.  Contains subsystems, OI devices, and commands.
+   * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public static XboxController m_driveController = new XboxController(DriveConstants.k_driveController);
   public static XboxController m_operatorController = new XboxController(DriveConstants.k_operatorController);
@@ -44,7 +43,7 @@ public class RobotContainer {
     configureButtonBindings();
     m_driveSubsystem.setDefaultCommand(new driveCommand(m_driveSubsystem));
     m_turretSubsystem.setDefaultCommand(new limelightTurretVisionCommand(m_turretSubsystem));
-
+    m_blinkin.blinkin();
   }
 
   /**
