@@ -119,13 +119,49 @@ public class RobotContainer {
 
     // Start of a Figure 8
     RamseteCommand ramseteCommand = createTrajectoryCommand(
-      new Pose2d(0, 0, new Rotation2d(0)),
-      List.of(new Translation2d( 0.5, -0.5)),
-      new Pose2d(1.0, -1.0, new Rotation2d(Math.PI/8)));
+        new Pose2d(0, 0, new Rotation2d(0)),
+        List.of(new Translation2d( 0.5, -0.5)),
+        new Pose2d(1.0, -1.0, new Rotation2d(Math.PI/8)));
 
+    RamseteCommand ramseteCommand2 = createTrajectoryCommand(
+        new Pose2d(1.0, -1.0, new Rotation2d(0)),
+        List.of(),
+        new Pose2d(1.5, -0.5, new Rotation2d(Math.PI/2)));
+
+    RamseteCommand ramseteCommand3 = createTrajectoryCommand(
+        new Pose2d(1.5, -0.5, new Rotation2d(Math.PI/2)),
+        List.of(),
+        new Pose2d(1.0, 0.0, new Rotation2d(Math.PI)));
+
+    RamseteCommand ramseteCommand4 = createTrajectoryCommand(
+        new Pose2d(1.0, 0.0, new Rotation2d(Math.PI)),
+        List.of(),
+        new Pose2d(0.5, -0.5, new Rotation2d(3*Math.PI/2)));
+
+    RamseteCommand ramseteCommand5 = createTrajectoryCommand(
+          new Pose2d(0.5, -0.5, new Rotation2d(3*Math.PI/2)),
+          List.of(),
+          new Pose2d(0.0, -1.0, new Rotation2d(Math.PI)));
+  
+    RamseteCommand ramseteCommand6 = createTrajectoryCommand(
+          new Pose2d(0.0, -1.0, new Rotation2d(Math.PI)),
+          List.of(),
+          new Pose2d(-0.5, -0.5, new Rotation2d(Math.PI/2)));
+  
+    RamseteCommand ramseteCommand7 = createTrajectoryCommand(
+          new Pose2d(-0.5, -0.5, new Rotation2d(Math.PI/2)),
+          List.of(),
+          new Pose2d(0.0, 0.0, new Rotation2d(0)));
+    
     // Run path following command, then stop at the end.
-    return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
-
+    return ramseteCommand
+             .andThen(ramseteCommand2)
+             .andThen(ramseteCommand3)
+             .andThen(ramseteCommand4)
+             .andThen(ramseteCommand5)
+             .andThen(ramseteCommand6)
+             .andThen(ramseteCommand7)
+             .andThen(() -> m_drive.tankDriveVolts(0, 0));
   }
 
   public RamseteCommand createTrajectoryCommand(Pose2d startPose, List<Translation2d> translationList, Pose2d endPose) {
