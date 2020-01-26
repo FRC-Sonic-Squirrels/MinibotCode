@@ -107,6 +107,28 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
+ 
+    var figure_eight = List.of(
+      new Translation2d( 0.5, -0.5),
+      new Translation2d( 1.0, -1.0),
+      new Translation2d( 1.5, -0.5),
+      new Translation2d( 1.0,  0.0),
+      new Translation2d( 0.5, -0.5),
+      new Translation2d( 0.0, -1.0),
+      new Translation2d(-0.5, -0.5));
+
+    // Start of a Figure 8
+    RamseteCommand ramseteCommand = createTrajectoryCommand(
+      new Pose2d(0, 0, new Rotation2d(0)),
+      List.of(new Translation2d( 0.5, -0.5)),
+      new Pose2d(1.0, -1.0, new Rotation2d(Math.PI/8)));
+
+    // Run path following command, then stop at the end.
+    return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
+
+  }
+
+  public RamseteCommand createTrajectoryCommand(Pose2d startPose, List<Translation2d> translationList, Pose2d endPose) {
     DifferentialDriveVoltageConstraint autoVoltageConstraint;
     TrajectoryConfig config;
   
@@ -122,19 +144,15 @@ public class RobotContainer {
 
     var initalTime = System.nanoTime();
 
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1.0, -0.5)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(2.0, 0.0, new Rotation2d(0)),
-        // Pass config
+    // trajectory to follow. All units in meters.
+   var trajectory = TrajectoryGenerator.generateTrajectory(
+        startPose,
+        translationList,
+        endPose,
         config);
 
     RamseteCommand ramseteCommand =
-        new RamseteCommand(exampleTrajectory, 
+        new RamseteCommand(trajectory, 
             m_drive::getPose,
             new RamseteController(kRamseteB, kRamseteZeta),
             m_drive.getFeedforward(),
@@ -149,7 +167,6 @@ public class RobotContainer {
     System.out.println("RamseteCommand generation time: " + dt + "ms");
 
     // Run path following command, then stop at the end.
-    return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
-
+    return ramseteCommand;
   }
 }
