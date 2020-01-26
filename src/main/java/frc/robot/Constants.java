@@ -43,9 +43,9 @@ public final class Constants {
         public static final double kaVoltSecondsSquaredPerMeter = 0.444;
 
         // Determined using frc-characterization
-        public static final double kPDriveVel = 36.6; 
-        public static final double kDDriveVel = 14.9;
-        
+        public static final double kPDriveVel = 3.0; // 36.6; 
+        public static final double kDDriveVel = 0.0; // 14.9;
+
         // SparkMax at 1ms update rate
         // kPDriveVel = 5.65
         // kDDriveVel = 2540.0 

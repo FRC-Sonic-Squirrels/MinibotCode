@@ -14,6 +14,8 @@ import static frc.robot.Constants.DriveConstants.kPDriveVel;
 import static frc.robot.Constants.DriveConstants.kEncoderCPR;
 import static frc.robot.Constants.DriveConstants.kDistancePerWheelRevolutionMeters;
 import static frc.robot.Constants.DriveConstants.kGearReduction;
+import static frc.robot.Constants.DriveConstants.kTrackwidthMeters;
+import static frc.robot.Constants.AutoConstants.kMaxSpeedMetersPerSecond;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -22,9 +24,10 @@ import com.revrobotics.EncoderType;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,7 +44,7 @@ public class driveSubsystem extends SubsystemBase {
       new CANSparkMax(DriveConstants.kRightNEO, MotorType.kBrushless);
   public static SpeedController m_leftMotors = new SpeedControllerGroup(m_leftNEO);;
   public static SpeedController m_rightMotors = new SpeedControllerGroup(m_rightNEO);
-  private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+  // private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
   private final CANEncoder m_leftEncoder = m_leftNEO.getEncoder(EncoderType.kHallSensor, kEncoderCPR);
   private final CANEncoder m_rightEncoder = m_rightNEO.getEncoder(EncoderType.kHallSensor, kEncoderCPR);
   private final SimpleMotorFeedforward  m_feedforward = 
@@ -80,7 +83,7 @@ public class driveSubsystem extends SubsystemBase {
     m_rightEncoder.setVelocityConversionFactor(
         kDistancePerWheelRevolutionMeters * kGearReduction / (60.0));
 
-    //m_rightEncoder.setInverted(true);
+    m_rightEncoder.setInverted(true);
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -93,10 +96,8 @@ public class driveSubsystem extends SubsystemBase {
     // Note: periodic() is run by the scheduler, always. No matter what.
     // Update the odometry in the periodic block
     double leftDist = m_leftEncoder.getPosition();
-    double rightDist = - m_rightEncoder.getPosition();
+    double rightDist = m_rightEncoder.getPosition();
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), leftDist, rightDist);
-       // m_leftEncoder.getPosition(),
-       // m_rightEncoder.getPosition());
 
     // log drive train and data to Smartdashboard
     SmartDashboard.putNumber("IMU_Yaw", m_gyro.getYaw());
@@ -105,7 +106,7 @@ public class driveSubsystem extends SubsystemBase {
 
     // report the wheel speed, position, and pose
     SmartDashboard.putNumber("left_wheel_Velocity", m_leftEncoder.getVelocity());
-    SmartDashboard.putNumber("right_wheel_Velocity", - m_rightEncoder.getVelocity());
+    SmartDashboard.putNumber("right_wheel_Velocity", m_rightEncoder.getVelocity());
 
     SmartDashboard.putNumber("left_wheel_Distance", leftDist); // m_leftEncoder.getPosition());
     SmartDashboard.putNumber("right_wheel_Distance", rightDist); // m_rightEncoder.getPosition());
@@ -142,10 +143,9 @@ public class driveSubsystem extends SubsystemBase {
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    // TODO: make sure encoder scaling works and we don't have to calculate it here
     return new DifferentialDriveWheelSpeeds(
         m_leftEncoder.getVelocity(),
-        - m_rightEncoder.getVelocity());
+        m_rightEncoder.getVelocity());
   }
 
   /**
@@ -183,7 +183,18 @@ public class driveSubsystem extends SubsystemBase {
    * @param rot the commanded rotation
    */
   public void arcadeDrive(double fwd, double rot) {
-    m_drive.arcadeDrive(fwd, rot);
+  
+    //m_drive.arcadeDrive(fwd, rot);
+
+    // Implement our own archade drive
+    var cs = new ChassisSpeeds(
+             rot * Math.PI / 4,   // max rotation 0.25*pi rad/sec
+             fwd * kMaxSpeedMetersPerSecond, 0.0);
+    var ws = new DifferentialDriveKinematics(kTrackwidthMeters).toWheelSpeeds(cs);
+    // TODO: make sure we left/right wheel speeds do not exceed maximum
+    var leftVolts = 10.0 * (ws.leftMetersPerSecond / kMaxSpeedMetersPerSecond);
+    var rightVolts = 10.0 * (ws.rightMetersPerSecond / kMaxSpeedMetersPerSecond);
+    tankDriveVolts(leftVolts, rightVolts);
   }
 
   /**
@@ -195,7 +206,7 @@ public class driveSubsystem extends SubsystemBase {
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     m_leftMotors.setVoltage(leftVolts);
     m_rightMotors.setVoltage(-rightVolts);
-    m_drive.feed();
+    // m_drive.feed();
   }
 
   /**
@@ -213,7 +224,7 @@ public class driveSubsystem extends SubsystemBase {
    */
   public double getAverageEncoderDistance() {
     // Was Encoder.getDistance()
-    return (m_leftEncoder.getPosition() - m_rightEncoder.getPosition()) / 2.0;
+    return (m_leftEncoder.getPosition() + m_rightEncoder.getPosition()) / 2.0;
   }
 
   /**
@@ -239,9 +250,9 @@ public class driveSubsystem extends SubsystemBase {
    *
    * @param maxOutput the maximum output to which the drive will be constrained
    */
-  public void setMaxOutput(double maxOutput) {
-    m_drive.setMaxOutput(maxOutput);
-  }
+  //public void setMaxOutput(double maxOutput) {
+  //  m_drive.setMaxOutput(maxOutput);
+  //}
 
   /**
    * Zeroes the heading of the robot.
