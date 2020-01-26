@@ -70,15 +70,17 @@ public class driveSubsystem extends SubsystemBase {
     // set scaling factor for CANEncoder.getPosition() so that it matches the output of
     // Encoder.getDistance() method.
     m_leftEncoder.setPositionConversionFactor(
-        kDistancePerWheelRevolutionMeters * kGearReduction / kEncoderCPR );
+        kDistancePerWheelRevolutionMeters * kGearReduction );
     m_rightEncoder.setPositionConversionFactor(
-        kDistancePerWheelRevolutionMeters * kGearReduction / kEncoderCPR );
+        kDistancePerWheelRevolutionMeters * kGearReduction );
 
     // Native scale is RPM. Scale velocity so that it is in meters/sec
     m_leftEncoder.setVelocityConversionFactor(
-        kDistancePerWheelRevolutionMeters * kGearReduction / (kEncoderCPR * 60.0));
+        kDistancePerWheelRevolutionMeters * kGearReduction / (60.0));
     m_rightEncoder.setVelocityConversionFactor(
-        kDistancePerWheelRevolutionMeters * kGearReduction / (kEncoderCPR * 60.0));
+        kDistancePerWheelRevolutionMeters * kGearReduction / (60.0));
+
+    //m_rightEncoder.setInverted(true);
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -90,8 +92,11 @@ public class driveSubsystem extends SubsystemBase {
   public void periodic() {
     // Note: periodic() is run by the scheduler, always. No matter what.
     // Update the odometry in the periodic block
-    m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_leftEncoder.getPosition(),
-        m_rightEncoder.getPosition());
+    double leftDist = m_leftEncoder.getPosition();
+    double rightDist = - m_rightEncoder.getPosition();
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), leftDist, rightDist);
+       // m_leftEncoder.getPosition(),
+       // m_rightEncoder.getPosition());
 
     // log drive train and data to Smartdashboard
     SmartDashboard.putNumber("IMU_Yaw", m_gyro.getYaw());
@@ -100,10 +105,12 @@ public class driveSubsystem extends SubsystemBase {
 
     // report the wheel speed, position, and pose
     SmartDashboard.putNumber("left_wheel_Velocity", m_leftEncoder.getVelocity());
-    SmartDashboard.putNumber("right_wheel_Velocity", m_rightEncoder.getVelocity());
+    SmartDashboard.putNumber("right_wheel_Velocity", - m_rightEncoder.getVelocity());
 
-    SmartDashboard.putNumber("left_wheel_Distance", m_leftEncoder.getPosition());
-    SmartDashboard.putNumber("right_wheel_Distance", m_rightEncoder.getPosition());
+    SmartDashboard.putNumber("left_wheel_Distance", leftDist); // m_leftEncoder.getPosition());
+    SmartDashboard.putNumber("right_wheel_Distance", rightDist); // m_rightEncoder.getPosition());
+
+    SmartDashboard.putNumber("DistFactor", m_leftEncoder.getPositionConversionFactor() );
 
     Pose2d currentPose = m_odometry.getPoseMeters();
     SmartDashboard.putNumber("pose_x",currentPose.getTranslation().getX());
@@ -138,7 +145,7 @@ public class driveSubsystem extends SubsystemBase {
     // TODO: make sure encoder scaling works and we don't have to calculate it here
     return new DifferentialDriveWheelSpeeds(
         m_leftEncoder.getVelocity(),
-        m_rightEncoder.getVelocity());
+        - m_rightEncoder.getVelocity());
   }
 
   /**
@@ -206,7 +213,7 @@ public class driveSubsystem extends SubsystemBase {
    */
   public double getAverageEncoderDistance() {
     // Was Encoder.getDistance()
-    return (m_leftEncoder.getPosition() + m_rightEncoder.getPosition()) / 2.0;
+    return (m_leftEncoder.getPosition() - m_rightEncoder.getPosition()) / 2.0;
   }
 
   /**
