@@ -202,7 +202,7 @@ public class driveSubsystem extends SubsystemBase {
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     m_leftMotors.setVoltage(leftVolts);
     m_rightMotors.setVoltage(rightVolts);
-    // m_drive.feed();
+    m_drive.feed();
   }
 
   /**
