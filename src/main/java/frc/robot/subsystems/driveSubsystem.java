@@ -11,6 +11,7 @@ import static frc.robot.Constants.DriveConstants.kaVoltSecondsSquaredPerMeter;
 import static frc.robot.Constants.DriveConstants.ksVolts;
 import static frc.robot.Constants.DriveConstants.kvVoltSecondsPerMeter;
 import static frc.robot.Constants.DriveConstants.kPDriveVel;
+import static frc.robot.Constants.DriveConstants.kDDriveVel;
 import static frc.robot.Constants.DriveConstants.kEncoderCPR;
 import static frc.robot.Constants.DriveConstants.kDistancePerWheelRevolutionMeters;
 import static frc.robot.Constants.DriveConstants.kGearReduction;
@@ -47,8 +48,8 @@ public class driveSubsystem extends SubsystemBase {
   private final SimpleMotorFeedforward  m_feedforward = 
       new SimpleMotorFeedforward(ksVolts, kvVoltSecondsPerMeter, kaVoltSecondsSquaredPerMeter);
 
-  private PIDController left_PIDController = new PIDController(kPDriveVel, 0.0, 0.0);
-  private PIDController right_PIDController =  new PIDController(kPDriveVel, 0.0, 0.0);
+  private PIDController left_PIDController = new PIDController(kPDriveVel, 0.0, kDDriveVel);
+  private PIDController right_PIDController =  new PIDController(kPDriveVel, 0.0, kDDriveVel);
 
   // The gyro sensor
   // private final Gyro m_gyro = new ADXRS450_Gyro();
