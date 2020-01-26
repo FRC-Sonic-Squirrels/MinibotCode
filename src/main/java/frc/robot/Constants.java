@@ -31,6 +31,6 @@ public static final class Manipulator {
 
 }
 public static final class PWMPorts {
-    public static final int kBlinkin_1 = 0;
+    public static final int kBlinkin = 0;
 }
 }

@@ -31,7 +31,7 @@ public class blinkin extends SubsystemBase {
    * 
    * @param pwmPort The PWM port the Blinkin is connected to.
    */
-  public blinkin(int pwmPort) {
+  public blinkin(final int pwmPort) {
     m_blinkin = new Spark(pwmPort);
     solid_orange();
     limelightListener();
@@ -47,7 +47,7 @@ public class blinkin extends SubsystemBase {
    * @param val The LED blink color and patern value [-1,1]
    * 
    */
-  public void set(double val) {
+  public void set(final double val) {
     if ((val >= -1.0) && (val <= 1.0)) {
       m_blinkin.set(val);
     }
@@ -69,47 +69,58 @@ public class blinkin extends SubsystemBase {
     set(0.63);
   }
 
-  /* 
-  * Add listeners to trigger on changes to the NetworkTable
-  *
-  * NetworkTable key for Alliance color:
-  *    FMSInfo -> IsRedAlliance -> value: (True|False)
-  *
-  * NetworkTable for Limelight in valid target
-  *    limelight -> tv -> value: (0 | 1)  // On valid target
-  *    limelight -> ta -> value: (% of image on target)  
-  *
-  */
-    
+  /*
+   * Add listeners to trigger on changes to the NetworkTable
+   *
+   * NetworkTable key for Alliance color: FMSInfo -> IsRedAlliance -> value:
+   * (True|False)
+   *
+   * NetworkTable for Limelight in valid target limelight -> tv -> value: (0 | 1)
+   * // On valid target limelight -> ta -> value: (% of image on target)
+   *
+   */
+
   private void limelightListener() {
-     final NetworkTable tableLimelight = NetworkTableInstance.getDefault().getTable("limelight");
-    
+    final NetworkTable tableLimelight = NetworkTableInstance.getDefault().getTable("limelight-1");
+
+    double onTarget = 0;
+
     /* Add listeners */
     tableLimelight.addEntryListener("tv", (table, key, entry, value, flags) -> {
-        boolean targetValid = value.getBoolean();
-        if (targetValid == true) {
-          solid_blue();
-          System.out.println("LED Solid Blue");
-        } else {
-          solid_orange();
-          System.out.println("LED Solid Orange");
-        }
+      boolean targetValid = value.getBoolean();
+      if (targetValid == true) {
+        solid_blue();
+        System.out.println("LED Solid Blue");
+      } else {
+        solid_orange();
+        System.out.println("LED Solid Orange");
+      }
+
     }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
     /* To be Used with future code */
     tableLimelight.addEntryListener("ta", (table, key, entry, value, flags) -> {
-        double targetArea = value.getDouble();
+      double targetArea = value.getDouble();
+
+      if (onTarget == 0 && targetArea > 80) {
+        flashing_blue();
+        System.out.println("LED Flashing Blue");
+      } else {
+        solid_orange();
+        System.out.println("LED Solid Orange");
+      }
     }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
   }
 
   private void allianceColorListener() {
-    NetworkTableEntry tableAllianceColor = NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance");
+    final NetworkTableEntry tableAllianceColor = NetworkTableInstance.getDefault().getTable("FMSInfo")
+        .getEntry("IsRedAlliance");
       tableAllianceColor.addListener(event -> {
         if (event.value.getBoolean() == true){
           solid_red();
           System.out.println("led RED"); 
         } else {
-          solid_blue();;
+          solid_blue();
           System.out.println("led BLUE");
         }
     }, TableEntryListener.kNew | TableEntryListener.kUpdate | TableEntryListener.kLocal) ;

@@ -30,7 +30,7 @@ public class RobotContainer {
   private final turretSubsystem m_turretSubsystem = new turretSubsystem();
   private final driveCommand m_driveCommand = new driveCommand(m_driveSubsystem);
   private final limelightTurretVisionCommand m_turretVisionCommand = new limelightTurretVisionCommand(m_turretSubsystem);
-  private final static blinkin m_blinkin = new blinkin(PWMPorts.kBlinkin_1);
+  private final static blinkin m_blinkin = new blinkin(PWMPorts.kBlinkin);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -41,9 +41,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    m_driveSubsystem.setDefaultCommand(new driveCommand(m_driveSubsystem));
-    m_turretSubsystem.setDefaultCommand(new limelightTurretVisionCommand(m_turretSubsystem));
-    m_blinkin.blinkin();
+    //m_driveSubsystem.setDefaultCommand(new driveCommand(m_driveSubsystem));
+    //m_turretSubsystem.setDefaultCommand(new limelightTurretVisionCommand(m_turretSubsystem));
+    //m_blinkin.blinkin();
   }
 
   /**
