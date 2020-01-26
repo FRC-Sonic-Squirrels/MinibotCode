@@ -43,8 +43,8 @@ public final class Constants {
         public static final double kaVoltSecondsSquaredPerMeter = 0.444;
 
         // Determined using frc-characterization
-        public static final double kPDriveVel = 10.0;
-        public static final double kDDriveVel = 1.0;
+        public static final double kPDriveVel = 12.0;
+        public static final double kDDriveVel = 0.0;
 
         // SparkMax at 1ms update rate
         // kPDriveVel = 5.65
@@ -76,8 +76,8 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond =  1.0;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 0.5;
+        public static final double kMaxSpeedMetersPerSecond =  .5;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 0.25;
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2;
