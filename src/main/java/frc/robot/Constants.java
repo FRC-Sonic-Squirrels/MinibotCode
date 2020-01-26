@@ -37,14 +37,15 @@ public final class Constants {
                 new DifferentialDriveKinematics(kTrackwidthMeters);
 
         // Determined using frc-characterization tool
-        public static final double ksVolts = 0.16;
-        public static final double kvVoltSecondsPerMeter = 4.66;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.486;
+        // old: 0.16,  4.66,  0.486
+        public static final double ksVolts = 0.138;
+        public static final double kvVoltSecondsPerMeter = 4.5;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.444;
 
         // Determined using frc-characterization
-        public static final double kPDriveVel = .01; // 38.5
-        public static final double kDDriveVel = 15.8;
-
+        public static final double kPDriveVel = 36.6; 
+        public static final double kDDriveVel = 14.9;
+        
         // SparkMax at 1ms update rate
         // kPDriveVel = 5.65
         // kDDriveVel = 2540.0 
