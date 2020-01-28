@@ -99,13 +99,12 @@ public class blinkin extends SubsystemBase {
           solidOrange();
           System.out.println("LED Solid Orange");
       }
-      }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
   }  
 
     
   private void allianceColorListener() {
-    final NetworkTableEntry tableAllianceColor = NetworkTableInstance.getDefault().getTable("FMSInfo")
-        .getEntry("IsRedAlliance");
+    final NetworkTableEntry tableAllianceColor = NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance");
       tableAllianceColor.addListener(event -> {
         if (event.value.getBoolean() == true){
           solidRed();
