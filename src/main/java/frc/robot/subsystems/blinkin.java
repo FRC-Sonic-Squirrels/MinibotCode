@@ -85,10 +85,9 @@ public class blinkin extends SubsystemBase {
   private void limelightListener() {
     NetworkTable tableLimelight = NetworkTableInstance.getDefault().getTable("limelight-one");
     
-    /* Add listeners */
-    tableLimelight.addEntryListener("tx", (table, key, entry, value, flags) -> {
+      tableLimelight.addEntryListener("tx", (table, key, entry, value, flags) -> {
       double tx = value.getDouble();
-
+      
       if (tx >= -1.0 && tx <= 1.0) {
           solidBlue();
           System.out.println("LED Solid Blue");
