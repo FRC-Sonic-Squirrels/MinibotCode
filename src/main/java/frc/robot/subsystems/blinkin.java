@@ -79,9 +79,7 @@ public class blinkin extends SubsystemBase {
    * NetworkTable key for Alliance color: FMSInfo -> IsRedAlliance -> value:
    * (True|False)
    *
-   * NetworkTable for Limelight in valid target limelight -> tv -> value: (0 | 1)
-   * // On valid target limelight -> ta -> value: (% of image on target)
-   *
+   * NetworkTable for Limelight: limelight-one -> tx -> value: (-29.8 <> 29.8)
    */
 
   private void limelightListener() {
@@ -89,12 +87,12 @@ public class blinkin extends SubsystemBase {
     
     /* Add listeners */
     tableLimelight.addEntryListener("tx", (table, key, entry, value, flags) -> {
-      double targetX = value.getDouble();
+      double tx = value.getDouble();
 
-      if (targetX >= -1.0 && targetX <= 1.0) {
+      if (tx >= -1.0 && tx <= 1.0) {
           solidBlue();
           System.out.println("LED Solid Blue");
-      } else if ((targetX < -1.0  && targetX > -29.8) || (targetX > 1.0  && targetX < 29.8)) {
+      } else if ((tx < -1.0  && tx > -29.8) || (tx > 1.0  && tx < 29.8)) {
           flashingBlue();
           System.out.println("LED Flashing Blue");
       } else {
