@@ -7,14 +7,8 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.networktables.EntryListenerFlags;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.TableEntryListener;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.PWMPorts;
 
 
@@ -34,10 +28,8 @@ public class blinkin extends SubsystemBase {
    */
   public blinkin() {
     m_blinkin = new Spark(PWMPorts.kBlinkin);
-    solidOrange();
   }
 
-  
   public void set(final double val) {
     if ((val >= -1.0) && (val <= 1.0)) {
       m_blinkin.set(val);
@@ -64,73 +56,4 @@ public class blinkin extends SubsystemBase {
     set(0.63);
   }
 
-  public boolean limeLightOnValidTarget() {
-    NetworkTable tvTable = NetworkTableInstance.getDefault().getTable("limelight-one");
-    NetworkTableEntry tv = tvTable.getEntry("tv");
-       if (tv.getDouble(0.0) == 1.0) {
-         System.out.println("tv treu " + tv);
-         return true;
-       }
-       else {
-         System.out.println("tv false " + tv);
-         return false;
-       }
-  }
-
-  public boolean limeLightInShootingRange() {
-    NetworkTable txTable = NetworkTableInstance.getDefault().getTable("limelight-one");
-        double tx = txTable.getEntry("tx").getDouble(0.0);
-        if (tx >= -1 && tx <= 1.0) {
-          System.out.println("tx true " + tx);
-          return true;
-          
-        }
-        else {
-          System.out.println("tx false " + tx);
-          return false;
-        }
-  }
 }
-
-/*
-   private void limelightListener() {
-    NetworkTable tableLimelight = NetworkTableInstance.getDefault().getTable("limelight-one");
-    
-      tableLimelight.addEntryListener("tx", (table, key, entry, value, flags) -> {
-      double tx = value.getDouble();
-      if (targetValid()) {
-           if (tx >= -1.0 && tx <= 1.0) {
-             solidBlue();
-             System.out.println("LED Solid Blue " + tx);
-           } else {
-             flashingBlue();
-             System.out.println("LED Flashing Blue " + tx); 
-           } 
-      }
-      else {
-          solidOrange();
-          System.out.println("LED Solid Orange");
-      }
-    
-    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-  }  
-
-    
-  private void allianceColorListener() {
-    final NetworkTableEntry tableAllianceColor = NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance");
-      tableAllianceColor.addListener(event -> {
-        if (event.value.getBoolean() == true){
-          solidRed();
-          System.out.println("led RED"); 
-        } else {
-          solidBlue();
-          System.out.println("led BLUE");
-        }
-    }, TableEntryListener.kNew | TableEntryListener.kUpdate | TableEntryListener.kLocal) ;
-  }
-
-public void blinkin() {
-}
-
-}
-*/
