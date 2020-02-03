@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.driveCommand;
+import frc.robot.commands.ledCommand;
 import frc.robot.commands.limelightTurretVisionCommand;
 import frc.robot.subsystems.driveSubsystem;
 import frc.robot.subsystems.turretSubsystem;
@@ -30,8 +31,8 @@ public class RobotContainer {
   private final turretSubsystem m_turretSubsystem = new turretSubsystem();
   private final driveCommand m_driveCommand = new driveCommand(m_driveSubsystem);
   private final limelightTurretVisionCommand m_turretVisionCommand = new limelightTurretVisionCommand(m_turretSubsystem);
-  private final static blinkin m_blinkin = new blinkin(PWMPorts.kBlinkin);
-
+  private final blinkin m_blinkin = new blinkin();
+  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -39,6 +40,10 @@ public class RobotContainer {
   public static XboxController m_operatorController = new XboxController(DriveConstants.k_operatorController);
 
   public RobotContainer() {
+
+    m_blinkin.setDefaultCommand(new ledCommand(m_blinkin));
+
+    
     // Configure the button bindings
     configureButtonBindings();
     //m_driveSubsystem.setDefaultCommand(new driveCommand(m_driveSubsystem));

@@ -15,6 +15,7 @@ import edu.wpi.first.networktables.TableEntryListener;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.PWMPorts;
 
 
 public class blinkin extends SubsystemBase {
@@ -31,22 +32,12 @@ public class blinkin extends SubsystemBase {
    * 
    * @param pwmPort The PWM port the Blinkin is connected to.
    */
-  public blinkin(final int pwmPort) {
-    m_blinkin = new Spark(pwmPort);
+  public blinkin() {
+    m_blinkin = new Spark(PWMPorts.kBlinkin);
     solidOrange();
-    limelightListener();
-    allianceColorListener();
   }
 
-  /*
-   * Set the color and blink pattern of the LED strip.
-   * 
-   * Consult the Rev Robotics Blinkin manual Table 5 for a mapping of values to
-   * patterns.
-   * 
-   * @param val The LED blink color and patern value [-1,1]
-   * 
-   */
+  
   public void set(final double val) {
     if ((val >= -1.0) && (val <= 1.0)) {
       m_blinkin.set(val);
@@ -73,31 +64,54 @@ public class blinkin extends SubsystemBase {
     set(0.63);
   }
 
-  /*
-   * Add listeners to trigger on changes to the NetworkTable
-   *
-   * NetworkTable key for Alliance color: FMSInfo -> IsRedAlliance -> value:
-   * (True|False)
-   *
-   * NetworkTable for Limelight: limelight-one -> tx -> value: (-29.8 <> 29.8)
-   */
+  public boolean limeLightOnValidTarget() {
+    NetworkTable tvTable = NetworkTableInstance.getDefault().getTable("limelight-one");
+    NetworkTableEntry tv = tvTable.getEntry("tv");
+       if (tv.getDouble(0.0) == 1.0) {
+         System.out.println("tv treu " + tv);
+         return true;
+       }
+       else {
+         System.out.println("tv false " + tv);
+         return false;
+       }
+  }
 
-  private void limelightListener() {
+  public boolean limeLightInShootingRange() {
+    NetworkTable txTable = NetworkTableInstance.getDefault().getTable("limelight-one");
+        double tx = txTable.getEntry("tx").getDouble(0.0);
+        if (tx >= -1 && tx <= 1.0) {
+          System.out.println("tx true " + tx);
+          return true;
+          
+        }
+        else {
+          System.out.println("tx false " + tx);
+          return false;
+        }
+  }
+}
+
+/*
+   private void limelightListener() {
     NetworkTable tableLimelight = NetworkTableInstance.getDefault().getTable("limelight-one");
     
       tableLimelight.addEntryListener("tx", (table, key, entry, value, flags) -> {
       double tx = value.getDouble();
-      
-      if (tx >= -1.0 && tx <= 1.0) {
-          solidBlue();
-          System.out.println("LED Solid Blue");
-      } else if ((tx < -1.0  && tx > -29.8) || (tx > 1.0  && tx < 29.8)) {
-          flashingBlue();
-          System.out.println("LED Flashing Blue");
-      } else {
+      if (targetValid()) {
+           if (tx >= -1.0 && tx <= 1.0) {
+             solidBlue();
+             System.out.println("LED Solid Blue " + tx);
+           } else {
+             flashingBlue();
+             System.out.println("LED Flashing Blue " + tx); 
+           } 
+      }
+      else {
           solidOrange();
           System.out.println("LED Solid Orange");
       }
+    
     }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
   }  
 
@@ -119,3 +133,4 @@ public void blinkin() {
 }
 
 }
+*/

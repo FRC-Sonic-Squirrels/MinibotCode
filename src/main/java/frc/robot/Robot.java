@@ -7,11 +7,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.ledCommand;
+import frc.robot.subsystems.blinkin;
 import frc.robot.subsystems.turretSubsystem;
 
 /**
@@ -54,6 +57,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    
   }
 
   /**
@@ -109,6 +113,12 @@ public class Robot extends TimedRobot {
     else if (RobotContainer.m_operatorController.getStartButtonPressed() && manualMode == true){
 			manualMode = false;
     }	
+
+    //if (NetworkTableInstance.getDefault().getTable("limelight-one").getEntry("tv").getDouble(0) == 1){
+      //RobotContainer.m_blinkin.solidBlue();
+    //} else if (NetworkTableInstance.getDefault().getTable("limelight-one").getEntry("tv").getDouble(0) == 0){
+     // RobotContainer.m_blinkin.solidOrange();
+    //}
   }
 
   @Override
