@@ -15,7 +15,7 @@ import frc.robot.commands.ledCommand;
 import frc.robot.commands.limelightTurretVisionCommand;
 import frc.robot.subsystems.driveSubsystem;
 import frc.robot.subsystems.turretSubsystem;
-import frc.robot.subsystems.blinkin;
+import frc.robot.subsystems.blinkinSubsystem;
 import frc.robot.Constants.PWMPorts;
 
 /**
@@ -31,7 +31,7 @@ public class RobotContainer {
   private final turretSubsystem m_turretSubsystem = new turretSubsystem();
   private final driveCommand m_driveCommand = new driveCommand(m_driveSubsystem);
   private final limelightTurretVisionCommand m_turretVisionCommand = new limelightTurretVisionCommand(m_turretSubsystem);
-  private final blinkin m_blinkin = new blinkin();
+  private final blinkinSubsystem m_blinkinSubsystem = new blinkinSubsystem();
   
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -41,14 +41,14 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    m_blinkin.setDefaultCommand(new ledCommand(m_blinkin));
+    m_blinkinSubsystem.setDefaultCommand(new ledCommand(m_blinkinSubsystem));
 
     
     // Configure the button bindings
     configureButtonBindings();
     //m_driveSubsystem.setDefaultCommand(new driveCommand(m_driveSubsystem));
     //m_turretSubsystem.setDefaultCommand(new limelightTurretVisionCommand(m_turretSubsystem));
-    //m_blinkin.blinkin();
+    //m_blinkinSubsystem.blinkinSubsystem();
   }
 
   /**

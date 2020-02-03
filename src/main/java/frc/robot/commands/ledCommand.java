@@ -11,23 +11,23 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.blinkin;
+import frc.robot.subsystems.blinkinSubsystem;
 
 public class ledCommand extends CommandBase {
   /**
    * Creates a new ledCommand.
    */
-  blinkin m_blinkin;
+  blinkinSubsystem m_blinkinSubsystem;
 
-  public ledCommand(blinkin subsystem) {
+  public ledCommand(blinkinSubsystem subsystem) {
     addRequirements(subsystem);
-    m_blinkin = subsystem;
+    m_blinkinSubsystem = subsystem;
 }
 
 // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_blinkin.solidOrange();
+    m_blinkinSubsystem.solidOrange();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,22 +40,23 @@ public class ledCommand extends CommandBase {
     NetworkTableEntry tx = table.getEntry("tx");
 
     double validTarget = tv.getDouble(0.0);
-    double inShootingRange = tx.getDouble(0.0);
+    double inRange = tx.getDouble(0.0);
 
     if (validTarget == 1.0) {
-      if (inShootingRange >= -1 && inShootingRange <= 1.0) {
-        m_blinkin.solidBlue();
+      // Values need to be tuned to trueup shooting range
+      if (inRange >= -1 && inRange <= 1.0) {
+        m_blinkinSubsystem.solidBlue();
         /* Need to change to dashboard */
-        System.out.println("SolidBlue" + inShootingRange);
+        System.out.println("SolidBlue" + inRange);
       }
       else {
-        m_blinkin.flashingBlue();
+        m_blinkinSubsystem.flashingBlue();
          /* Need to change to dashboard */
-        System.out.println("flash blue" + inShootingRange);
+        System.out.println("flash blue" + inRange);
       }
     }
     else {
-      m_blinkin.solidOrange();
+      m_blinkinSubsystem.solidOrange();
        /* Need to change to dashboard */
       System.out.println("orange" + validTarget);
     }

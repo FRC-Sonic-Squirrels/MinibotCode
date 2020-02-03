@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.ledCommand;
-import frc.robot.subsystems.blinkin;
 import frc.robot.subsystems.turretSubsystem;
 
 /**
