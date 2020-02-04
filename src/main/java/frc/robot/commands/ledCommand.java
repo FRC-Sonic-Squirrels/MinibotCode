@@ -36,29 +36,24 @@ public class ledCommand extends CommandBase {
     
     /* limelight network table entries used to determine LED colors */
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-one");
-    NetworkTableEntry tv = table.getEntry("tv");
-    NetworkTableEntry tx = table.getEntry("tx");
+    double tv = table.getEntry("tv").getDouble(0.0);
+    double tx = table.getEntry("tx").getDouble(0.0);
 
-    double validTarget = tv.getDouble(0.0);
-    double inRange = tx.getDouble(0.0);
-
-    if (validTarget == 1.0) {
+    if (tv == 1.0) {
       // Values need to be tuned
-      if (inRange >= -1 && inRange <= 1.0) {
+      if (tx >= -1 && tx <= 1.0) {
         m_blinkinSubsystem.solidBlue();
-        /* Need to change to dashboard */
-        System.out.println("SolidBlue" + inRange);
+        /* Change to dashboard */
+        System.out.println("SolidBlue" + tx);
       }
       else {
         m_blinkinSubsystem.flashingBlue();
-         /* Need to change to dashboard */
-        System.out.println("flash blue" + inRange);
+        System.out.println("flash blue" + tx);
       }
     }
     else {
       m_blinkinSubsystem.solidOrange();
-       /* Need to change to dashboard */
-      System.out.println("orange" + validTarget);
+      System.out.println("orange" + tv);
     }
       
   }
