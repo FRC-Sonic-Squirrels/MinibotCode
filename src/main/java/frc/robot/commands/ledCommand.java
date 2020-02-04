@@ -34,7 +34,7 @@ public class ledCommand extends CommandBase {
   @Override
   public void execute() {
     
-    /* Use limelight network table entries for LED on/near target values */
+    /* limelight network table entries used to determine LED colors */
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-one");
     NetworkTableEntry tv = table.getEntry("tv");
     NetworkTableEntry tx = table.getEntry("tx");
@@ -43,7 +43,7 @@ public class ledCommand extends CommandBase {
     double inRange = tx.getDouble(0.0);
 
     if (validTarget == 1.0) {
-      // Values need to be tuned to trueup shooting range
+      // Values need to be tuned
       if (inRange >= -1 && inRange <= 1.0) {
         m_blinkinSubsystem.solidBlue();
         /* Need to change to dashboard */
