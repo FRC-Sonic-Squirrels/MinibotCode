@@ -46,7 +46,7 @@ public class controlPanel extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_colorSensor.rotationCount() >= 3) {
+    if (m_colorSensor.getRotationCount() >= 3) {
       return true;
     }
     return false;

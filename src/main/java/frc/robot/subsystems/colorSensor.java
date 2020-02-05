@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* Copyright (c) 2019 FIRST. All Rights Reserved. */
+/* Open Source Software - may be modified and shared by FRC teams. The code */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
+/* the project. */
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.subsystems;
@@ -25,8 +25,8 @@ public class colorSensor extends SubsystemBase {
   String lastSeenColor = "Unknown";
   private int count = 0;
   /*
-   * Color Wheel Blue CMY: 100,0,0 RGB: #00FFFF Green CMY: 100,0,100 RGB: #00FF00
-   * Red CMY: 0,100,100 RGB: #FF0000 Yellow CMY: 0,0,100 RGB: #FFFF00
+   * Color Wheel Blue CMY: 100,0,0 RGB: #00FFFF Green CMY: 100,0,100 RGB: #00FF00 Red CMY: 0,100,100
+   * RGB: #FF0000 Yellow CMY: 0,0,100 RGB: #FFFF00
    */
   private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
   private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
@@ -44,7 +44,7 @@ public class colorSensor extends SubsystemBase {
   public void senseColorWheelPos() {
     // This method will be called once per scheduler run
     Color detectedColor = m_colorSensor.getColor();
-    
+
 
     /**
      * Run the color match algorithm on our detected color
@@ -75,53 +75,55 @@ public class colorSensor extends SubsystemBase {
 
     /* Code for counting colors */
 
-    if (lastSeenColor.equals("Red")){
+    if (lastSeenColor.equals("Red")) {
       if (colorString.equals("Green")) {
-        count = count +1;
+        count = count + 1;
       }
       if (colorString.equals("Yellow")) {
-        count = count -1;
-      } 
-    }
-    else if (lastSeenColor.equals("Green")){
+        count = count - 1;
+      }
+    } else if (lastSeenColor.equals("Green")) {
       if (colorString.equals("Blue")) {
-        count = count +1;
+        count = count + 1;
       }
       if (colorString.equals("Red")) {
-        count = count -1;
+        count = count - 1;
       }
-    }
-    else if (lastSeenColor.equals("Blue")){
+    } else if (lastSeenColor.equals("Blue")) {
       if (colorString.equals("Yellow")) {
-        count = count +1;
+        count = count + 1;
       }
       if (colorString.equals("Green")) {
-        count = count -1;
-    } 
-    else if(lastSeenColor.equals("Yellow")){
+        count = count - 1;
+      }
+    } else if (lastSeenColor.equals("Yellow")) {
       if (colorString.equals("Red")) {
-        count = count +1;
-    }
+        count = count + 1;
+      }
       if (colorString.equals("Blue")) {
-        count = count -1;
+        count = count - 1;
+      }
     }
-    }
-//Color reset and count display on SmartDashboard
+    // Color reset and count display on SmartDashboard
     lastSeenColor = colorString;
     SmartDashboard.putNumber("Count", count);
 
-//TODO: Detect errors and unknown colors
+    // TODO: Detect errors and unknown colors
 
-    //System.out.println("Color Change Count: " + count);
+    // System.out.println("Color Change Count: " + count);
 
-    
+
 
     /*
      * Print out for colorString
      * 
-     * if (colorString != lastSeenColor) { System.out.println("Color: " +
-     * colorString); lastSeenColor = colorString; }
+     * if (colorString != lastSeenColor) { System.out.println("Color: " + colorString);
+     * lastSeenColor = colorString; }
      */
   }
+
+  public double getRotationCount() {
+    return (count / 8);
   }
 }
+
