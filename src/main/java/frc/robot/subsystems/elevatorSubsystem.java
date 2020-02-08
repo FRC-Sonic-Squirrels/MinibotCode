@@ -15,64 +15,90 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.elevatorConstants;
+import frc.robot.commands.elevatorWinch;
+
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class elevatorSubsystem extends SubsystemBase {
 
-  public double P;
-  public double I;
-  public double D;
-  public double F;
+  private double P;
+  private double I;
+  private double D;
+  private double F;
 
-  public final WPI_TalonFX elevator1 = new WPI_TalonFX(elevatorConstants.elevator1);
-  private final WPI_TalonFX elevator2 = new WPI_TalonFX(elevatorConstants.elevator2);
+
+
+  private Solenoid leftSolenoid1=new Solenoid(1);
+  private Solenoid leftSolenoid2=new Solenoid(1, 1);
+
+  private Solenoid rightSolenoid1=new Solenoid(1);
+  private Solenoid rightSolenoid2=new Solenoid(1, 1);
+
   public final static WPI_TalonFX elevatorWinch = new WPI_TalonFX(elevatorConstants.elevatorWinch);
+
+  public class airsystem extends Pneumatics {
+
+  
+    
+  }
 
   /**
    * Creates a new Climber.
    */
   public elevatorSubsystem() {
-    elevator1.configFactoryDefault();
-    elevator2.configFactoryDefault();
-    elevator2.follow(elevator1);
-    elevator2.setInverted(false);
-    elevator1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,
+    elevatorWinch.configFactoryDefault();
+    elevatorWinch.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,
         elevatorConstants.elevatorSlotIdx,
         elevatorConstants.elevatorPivotTimeout);
-    elevator1.setSensorPhase(true);
-    elevator1.configNominalOutputForward(0, elevatorConstants.elevatorPivotTimeout);
-    elevator1.configNominalOutputReverse(0, elevatorConstants.elevatorPivotTimeout);
-    elevator1.configPeakOutputForward(0.25, elevatorConstants.elevatorPivotTimeout);
-    elevator1.configPeakOutputReverse(-0.25, elevatorConstants.elevatorPivotTimeout);
-    elevator1.setNeutralMode(NeutralMode.Brake);
-    elevator2.setNeutralMode(NeutralMode.Brake);
+    elevatorWinch.setSensorPhase(true);
+    elevatorWinch.configNominalOutputForward(0, elevatorConstants.elevatorPivotTimeout);
+    elevatorWinch.configNominalOutputReverse(0, elevatorConstants.elevatorPivotTimeout);
+    elevatorWinch.configPeakOutputForward(0.25, elevatorConstants.elevatorPivotTimeout);
+    elevatorWinch.configPeakOutputReverse(-0.25, elevatorConstants.elevatorPivotTimeout);
+    elevatorWinch.setNeutralMode(NeutralMode.Brake);
 
-    elevator1.configAllowableClosedloopError(elevatorConstants.elevatorSlotIdx, 0, elevatorConstants.elevatorPivotTimeout);
+    elevatorWinch.configAllowableClosedloopError(elevatorConstants.elevatorSlotIdx, 0, 
+    elevatorConstants.elevatorPivotTimeout);
+   
+   
+    leftSolenoid1.set(true);
+    leftSolenoid2.set(false);
+    rightSolenoid1.set(true);
+    rightSolenoid2.set(false);
+
+    setElevatorPID(P, I, D, F);
     P = 0.1;
     I = 0;
     D = 0;
     F = 0;
-    
-    setElevatorPID(P, I, D, F);
   }
 
   public void setElevatorPosition(double desiredPosition) {
     SmartDashboard.putNumber("DesiredPosition", desiredPosition);
-    elevator1.set(ControlMode.Position, desiredPosition);
+    elevatorWinch.set(ControlMode.Position, desiredPosition);
   }
+  
+  public void deployElevator(){
+    // TODO: deploy pneumatic for elevator
+     
+  }
+  
 
   @Override
   public void periodic() {
-     SmartDashboard.putNumber("Elevator_1_Pos", elevator1.getSelectedSensorPosition());
-     SmartDashboard.putNumber("Evevator_2_Pos", elevator2.getSelectedSensorPosition());
+    
+     SmartDashboard.putNumber("Elevator_1_Pos", elevatorWinch.getSelectedSensorPosition());
   }
 
   public void setElevatorPID(double P, double I, double D, double F)
 
   {
-    elevator1.config_kP(elevatorConstants.elevatorSlotIdx, P, elevatorConstants.elevatorPivotTimeout);
-    elevator1.config_kP(elevatorConstants.elevatorSlotIdx, I, elevatorConstants.elevatorPivotTimeout);
-    elevator1.config_kP(elevatorConstants.elevatorSlotIdx, D, elevatorConstants.elevatorPivotTimeout);
-    elevator1.config_kP(elevatorConstants.elevatorSlotIdx, F, elevatorConstants.elevatorPivotTimeout);
+    elevatorWinch.config_kP(elevatorConstants.elevatorSlotIdx, P, elevatorConstants.elevatorPivotTimeout);
+    elevatorWinch.config_kP(elevatorConstants.elevatorSlotIdx, I, elevatorConstants.elevatorPivotTimeout);
+    elevatorWinch.config_kP(elevatorConstants.elevatorSlotIdx, D, elevatorConstants.elevatorPivotTimeout);
+    elevatorWinch.config_kP(elevatorConstants.elevatorSlotIdx, F, elevatorConstants.elevatorPivotTimeout);
   }
 
 }
