@@ -11,7 +11,6 @@ public class Pneumatics {
     private Solenoid s1, s2;
     private Compressor airCompressor;
 
-
     public void airsystem() {
 
         DriverStick = new Joystick(1);
@@ -41,4 +40,26 @@ public class Pneumatics {
         }
     }
 
+    public void deployStage1() {
+        //TODO:send pneumatics up with climber
+        //TODO: make sure ddeploy in correct direction
+    }
+
+    public void deployStage2() {
+    }
+
+    public void retract1() {
+        //TODO: lower climber so we can try again
+    }
+
+    public void retract2() {
+    }
+
+    public void stow() {
+        //TODO: fully retract climbing gear
+    }
+
+    public void reversePneumatics() {
+        //TODO: reverse the pneumatics for ascent
+    }
 }

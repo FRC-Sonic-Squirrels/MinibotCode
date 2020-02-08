@@ -30,12 +30,9 @@ public class elevatorSubsystem extends SubsystemBase {
 
 
 
-  private Solenoid leftSolenoid1=new Solenoid(1);
-  private Solenoid leftSolenoid2=new Solenoid(1, 1);
-
-  private Solenoid rightSolenoid1=new Solenoid(1);
-  private Solenoid rightSolenoid2=new Solenoid(1, 1);
-
+  private Solenoid solenoid1 = new Solenoid(1);
+  private Solenoid solenoid2 = new Solenoid(1, 1);
+ 
   public final static WPI_TalonFX elevatorWinch = new WPI_TalonFX(elevatorConstants.elevatorWinch);
 
   public class airsystem extends Pneumatics {
@@ -43,7 +40,6 @@ public class elevatorSubsystem extends SubsystemBase {
   
     
   }
-
   /**
    * Creates a new Climber.
    */
@@ -62,11 +58,8 @@ public class elevatorSubsystem extends SubsystemBase {
     elevatorWinch.configAllowableClosedloopError(elevatorConstants.elevatorSlotIdx, 0, 
     elevatorConstants.elevatorPivotTimeout);
    
-   
-    leftSolenoid1.set(true);
-    leftSolenoid2.set(false);
-    rightSolenoid1.set(true);
-    rightSolenoid2.set(false);
+    solenoid1.set(true);
+    solenoid2.set(false);
 
     setElevatorPID(P, I, D, F);
     P = 0.1;

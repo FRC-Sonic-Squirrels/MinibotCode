@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.elevatorSubsystem;
+import frc.robot.Constants.elevatorConstants;
 
 public class elevatorWinch extends CommandBase {
 
@@ -26,6 +27,14 @@ public class elevatorWinch extends CommandBase {
   public void initialize() {
 	elevatorSubsystem.elevatorWinch.setNeutralMode(NeutralMode.Brake);
   }
+  
+  public void raiseRobot() {
+    //TODO: pull robot up
+}
+
+public void lowerRobot() {
+    //TODO: set robot down
+}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
