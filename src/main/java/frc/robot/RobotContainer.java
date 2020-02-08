@@ -9,6 +9,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -38,6 +39,11 @@ public class RobotContainer {
    */
   public static XboxController m_driveController = new XboxController(DriveConstants.k_driveController);
   public static XboxController m_operatorController = new XboxController(DriveConstants.k_operatorController);
+ 
+  public static Compressor airCompressor = new Compressor(1);
+
+
+ 
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();

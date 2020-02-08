@@ -26,10 +26,10 @@ public final class Constants {
     }
 
     public static final class elevatorConstants {
+        public static final int elevatorWinch = 3;
         public static final int Solenoid1 = 4;
         public static final int Solenoid2 = 5;
-        public static final int brakeSolenoid = 6;
-        public static final int elevatorWinch = 3;
+        public static int brakeSolenoidID = 6;
         public static final int elevatorPivotTimeout = 30;
         public static final int elevatorSlotIdx = 0;
     }
