@@ -7,31 +7,24 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.EncoderType;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.elevatorConstants;
-import frc.robot.commands.elevatorWinch;
-
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.Solenoid;
+import frc.robot.RobotContainer;
 
 public class elevatorSubsystem extends SubsystemBase {
 
-  private Solenoid stage1Solenoid = new Solenoid(1); // TODO: get correct ids
-  private Solenoid stage2Solenoid = new Solenoid(1, 1);
+  private Solenoid stage1Solenoid = new Solenoid(elevatorConstants.Solenoid1); // TODO: get correct ids
+  private Solenoid stage2Solenoid = new Solenoid(elevatorConstants.Solenoid2);
   private Solenoid brakeSolenoid = new Solenoid(elevatorConstants.brakeSolenoidID);
 
-  private final CANSparkMax elevatorWinch = new CANSparkMax(elevatorConstants.elevatorWinch, MotorType.kBrushless);
+  public final static CANSparkMax elevatorWinch = new CANSparkMax(elevatorConstants.elevatorWinch, MotorType.kBrushless);
   private final CANEncoder elevatorEncoder = elevatorWinch.getEncoder(EncoderType.kHallSensor, 2048);
 
   /**
@@ -51,11 +44,11 @@ public class elevatorSubsystem extends SubsystemBase {
   }
 
   public void deployStage1() {
-    // TODO:send pneumatics up with climber
-    // TODO: make sure ddeploy in correct direction
+    stage1Solenoid.set(true);
   }
 
   public void deployStage2() {
+    stage2Solenoid.set(false);
   }
 
   public void retract1() {
