@@ -10,10 +10,14 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.EncoderType;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.elevatorConstants;
 import frc.robot.commands.elevatorWinch;
 
@@ -23,75 +27,70 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 public class elevatorSubsystem extends SubsystemBase {
 
-  private double P;
-  private double I;
-  private double D;
-  private double F;
+  private Solenoid stage1Solenoid = new Solenoid(1); // TODO: get correct ids
+  private Solenoid stage2Solenoid = new Solenoid(1, 1);
+  private Solenoid brakeSolenoid = new Solenoid(elevatorConstants.brakeSolenoidID);
 
+  private final CANSparkMax elevatorWinch = new CANSparkMax(elevatorConstants.elevatorWinch, MotorType.kBrushless);
+  private final CANEncoder elevatorEncoder = elevatorWinch.getEncoder(EncoderType.kHallSensor, 2048);
 
-
-  private Solenoid solenoid1 = new Solenoid(1);
-  private Solenoid solenoid2 = new Solenoid(1, 1);
- 
-  public final static WPI_TalonFX elevatorWinch = new WPI_TalonFX(elevatorConstants.elevatorWinch);
-
-  public class airsystem extends Pneumatics {
-
-  
-    
-  }
   /**
    * Creates a new Climber.
    */
   public elevatorSubsystem() {
-    elevatorWinch.configFactoryDefault();
-    elevatorWinch.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,
-        elevatorConstants.elevatorSlotIdx,
-        elevatorConstants.elevatorPivotTimeout);
-    elevatorWinch.setSensorPhase(true);
-    elevatorWinch.configNominalOutputForward(0, elevatorConstants.elevatorPivotTimeout);
-    elevatorWinch.configNominalOutputReverse(0, elevatorConstants.elevatorPivotTimeout);
-    elevatorWinch.configPeakOutputForward(0.25, elevatorConstants.elevatorPivotTimeout);
-    elevatorWinch.configPeakOutputReverse(-0.25, elevatorConstants.elevatorPivotTimeout);
-    elevatorWinch.setNeutralMode(NeutralMode.Brake);
 
-    elevatorWinch.configAllowableClosedloopError(elevatorConstants.elevatorSlotIdx, 0, 
-    elevatorConstants.elevatorPivotTimeout);
-   
-    solenoid1.set(true);
-    solenoid2.set(false);
+    stage1Solenoid.set(false);
+    stage2Solenoid.set(false);
 
-    setElevatorPID(P, I, D, F);
-    P = 0.1;
-    I = 0;
-    D = 0;
-    F = 0;
+    elevatorWinch.restoreFactoryDefaults();
+    elevatorWinch.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    elevatorEncoder.setInverted(false);
+
+    RobotContainer.airCompressor.start();
+
   }
 
-  public void setElevatorPosition(double desiredPosition) {
-    SmartDashboard.putNumber("DesiredPosition", desiredPosition);
-    elevatorWinch.set(ControlMode.Position, desiredPosition);
+  public void deployStage1() {
+    // TODO:send pneumatics up with climber
+    // TODO: make sure ddeploy in correct direction
   }
-  
-  public void deployElevator(){
-    // TODO: deploy pneumatic for elevator
-     
+
+  public void deployStage2() {
   }
-  
+
+  public void retract1() {
+    // TODO: lower climber so we can try again
+  }
+
+  public void retract2() {
+  }
+
+  public void raiseRobot() {
+    brakeOff();
+    elevatorWinch.setVoltage(6);
+  }
+
+  public void lowerRobot() {
+    brakeOff();
+    elevatorWinch.setVoltage(-2);
+  }
+
+  public void stopWinch() {
+    elevatorWinch.setVoltage(0);
+    brakeOn();
+  }
+
+  public void brakeOn() {
+    brakeSolenoid.set(true);
+  }
+
+  public void brakeOff() {
+    brakeSolenoid.set(false);
+  }
 
   @Override
   public void periodic() {
-    
-     SmartDashboard.putNumber("Elevator_1_Pos", elevatorWinch.getSelectedSensorPosition());
-  }
-
-  public void setElevatorPID(double P, double I, double D, double F)
-
-  {
-    elevatorWinch.config_kP(elevatorConstants.elevatorSlotIdx, P, elevatorConstants.elevatorPivotTimeout);
-    elevatorWinch.config_kP(elevatorConstants.elevatorSlotIdx, I, elevatorConstants.elevatorPivotTimeout);
-    elevatorWinch.config_kP(elevatorConstants.elevatorSlotIdx, D, elevatorConstants.elevatorPivotTimeout);
-    elevatorWinch.config_kP(elevatorConstants.elevatorSlotIdx, F, elevatorConstants.elevatorPivotTimeout);
+    SmartDashboard.putNumber("Winch_RPM", elevatorEncoder.getVelocity());
   }
 
 }
