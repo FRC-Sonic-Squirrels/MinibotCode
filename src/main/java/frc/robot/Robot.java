@@ -33,9 +33,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    turretSubsystem.turretDrive.setSelectedSensorPosition(0, 0, 10);
-    turretSubsystem.turretDrive.getSensorCollection().setQuadraturePosition(0, 10);
-    elevatorSubsystem.elevatorWinch.setNeutralMode(NeutralMode.Coast);
   }
 
   /**

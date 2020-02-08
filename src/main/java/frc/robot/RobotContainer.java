@@ -59,10 +59,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    final JoystickButton abutton = new JoystickButton(m_driveController, Button.kA.value);
-    abutton.whenPressed(() -> m_elevatorSubsystem.setElevatorPosition(0.0), m_elevatorSubsystem);
-    final JoystickButton bbutton = new JoystickButton(m_driveController, Button.kB.value);
-    bbutton.whenPressed(() -> m_elevatorSubsystem.deployElevator());
+ 
     //elevator1.set(ControlMode.Position, 2048), m_elevatorSubsystem);
     //bbutton.whenPressed(new elevatorCommand());
   }
