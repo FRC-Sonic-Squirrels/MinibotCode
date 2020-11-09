@@ -70,6 +70,9 @@ public class driveSubsystem extends SubsystemBase {
     
     m_rightNEO.setInverted(true);
 
+    m_rightNEO.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    m_leftNEO.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
     m_leftMotors = new SpeedControllerGroup(m_leftNEO);
     m_rightMotors = new SpeedControllerGroup(m_rightNEO);
 
