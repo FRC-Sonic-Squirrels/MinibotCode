@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
@@ -120,48 +119,11 @@ public class RobotContainer {
     // Start of a Figure 8
     RamseteCommand ramseteCommand = createTrajectoryCommand(
         new Pose2d(0, 0, new Rotation2d(0)),
-        List.of(new Translation2d( 0.5, -0.5)),
-        new Pose2d(1.0, -1.0, new Rotation2d(Math.PI/8)));
-
-    RamseteCommand ramseteCommand2 = createTrajectoryCommand(
-        new Pose2d(1.0, -1.0, new Rotation2d(0)),
-        List.of(),
-        new Pose2d(1.5, -0.5, new Rotation2d(Math.PI/2)));
-
-    RamseteCommand ramseteCommand3 = createTrajectoryCommand(
-        new Pose2d(1.5, -0.5, new Rotation2d(Math.PI/2)),
-        List.of(),
-        new Pose2d(1.0, 0.0, new Rotation2d(Math.PI)));
-
-    RamseteCommand ramseteCommand4 = createTrajectoryCommand(
-        new Pose2d(1.0, 0.0, new Rotation2d(Math.PI)),
-        List.of(),
-        new Pose2d(0.5, -0.5, new Rotation2d(3*Math.PI/2)));
-
-    RamseteCommand ramseteCommand5 = createTrajectoryCommand(
-          new Pose2d(0.5, -0.5, new Rotation2d(3*Math.PI/2)),
-          List.of(),
-          new Pose2d(0.0, -1.0, new Rotation2d(Math.PI)));
-  
-    RamseteCommand ramseteCommand6 = createTrajectoryCommand(
-          new Pose2d(0.0, -1.0, new Rotation2d(Math.PI)),
-          List.of(),
-          new Pose2d(-0.5, -0.5, new Rotation2d(Math.PI/2)));
-  
-    RamseteCommand ramseteCommand7 = createTrajectoryCommand(
-          new Pose2d(-0.5, -0.5, new Rotation2d(Math.PI/2)),
-          List.of(),
-          new Pose2d(0.0, 0.0, new Rotation2d(0)));
+        figure_eight,
+        new Pose2d(0.0, 0.0, new Rotation2d(0)));
     
     // Run path following command, then stop at the end.
-    return ramseteCommand
-             .andThen(ramseteCommand2)
-             .andThen(ramseteCommand3)
-             .andThen(ramseteCommand4)
-             .andThen(ramseteCommand5)
-             .andThen(ramseteCommand6)
-             .andThen(ramseteCommand7)
-             .andThen(() -> m_drive.tankDriveVolts(0, 0));
+    return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
   }
 
   public RamseteCommand createTrajectoryCommand(Pose2d startPose, List<Translation2d> translationList, Pose2d endPose) {
@@ -178,10 +140,10 @@ public class RobotContainer {
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint);
 
-    var initalTime = System.nanoTime();
+    var initialTime = System.nanoTime();
 
     // trajectory to follow. All units in meters.
-   var trajectory = TrajectoryGenerator.generateTrajectory(
+    var trajectory = TrajectoryGenerator.generateTrajectory(
         startPose,
         translationList,
         endPose,
@@ -199,7 +161,7 @@ public class RobotContainer {
             m_drive::tankDriveVolts,
             m_drive);
 
-    var dt = (System.nanoTime() - initalTime) / 1E6;
+    var dt = (System.nanoTime() - initialTime) / 1E6;
     System.out.println("RamseteCommand generation time: " + dt + "ms");
 
     // Run path following command, then stop at the end.
