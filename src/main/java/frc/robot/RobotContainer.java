@@ -17,7 +17,6 @@
  *   https://github.com/JimWright4089/FIRSTRobots/blob/master/Code/TWambat/ramsetecommand/
  */
 
-
 package frc.robot;
 
 import static frc.robot.Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared;
@@ -101,12 +100,39 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  public Command getAutonomousCommand(String autoName) {
+
+    if (autoName == "donothing") {
+      return getNoAutonomousCommand();
+    }
+    else if (autoName == "figure8") {
+      return getAutonomousFigure8Command();
+    }
+    else if (autoName == "barrel") {
+      // TODO: write Barrel Auton command and uncomment the next line
+      // return getAutonomousBarrelCommand();
+    }
+    else if (autoName == "slalom") {
+      // TODO: write Slalom Auton command and uncomment the next line
+      // return getAutonomousSlalomCommand();
+    }
+    else if (autoName == "bounce") {
+      // TODO: write Bounce Auton command and uncomment the next line
+      // return getAutonomousBounceCommand();
+    }
+
+    // return do nothing if we don't recognize the choice
+    System.out.println("Warning: No autonomous command specified.");
+    return getNoAutonomousCommand();
+  }
+
   public Command getNoAutonomousCommand() {
     return new RunCommand(() -> m_drive.tankDriveVolts(0, 0));
   }
 
-  public Command getAutonomousCommand() {
+  public Command getAutonomousFigure8Command() {
  
+    /// distances are in Meters
     var figure_eight = List.of(
       new Translation2d( 0.5, -0.5),
       new Translation2d( 1.0, -1.0),
