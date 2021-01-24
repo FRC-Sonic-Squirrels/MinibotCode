@@ -15,7 +15,10 @@
     "**/*~": true
   },
   "cSpell.words": [
+    "donothing",
+    "nonothing",
     "startbutton",
+    "teleoperated",
     "ybutton"
   ]
 }
