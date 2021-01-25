@@ -109,8 +109,7 @@ public class RobotContainer {
       return getAutonomousFigure8Command();
     }
     else if (autoName == "barrel") {
-      // TODO: write Barrel Auton command and uncomment the next line
-      // return getAutonomousBarrelCommand();
+      return getAutonomousBarrelCommand();
     }
     else if (autoName == "slalom") {
       // TODO: write Slalom Auton command and uncomment the next line
@@ -126,10 +125,60 @@ public class RobotContainer {
     return getNoAutonomousCommand();
   }
 
+  /**
+   * getNoAutonomousCommand() - return a trivial command object that does nothing.
+   * 
+   * This is intended to be a safe placeholder command that does nothing.
+   * 
+   * @return Autonomous Command object
+   */
   public Command getNoAutonomousCommand() {
+    // set drive motors power to zero.
     return new RunCommand(() -> m_drive.tankDriveVolts(0, 0));
   }
 
+
+
+  /**
+   * getAutonomousBarrelCommand - generate Barrel AutoNav Command
+   * 
+   * @return Command object
+   */
+  public Command getAutonomousBarrelCommand(){
+ 
+    // TODO: complete Barrel Auton command and uncomment the next line
+
+    // distances are in Meters
+    var barrel_path_points = List.of(
+      // navigate around first barrel, centered at D5 (150,60)
+      new Translation2d( inches2meters(150), inches2meters(90)),
+      new Translation2d( inches2meters(180), inches2meters(60)),
+      new Translation2d( inches2meters(150), inches2meters(30)),
+      new Translation2d( inches2meters(120), inches2meters(60))
+
+      // TODO: navigate around B8  (240, 120)
+
+      // TODO: navigate around D10 (300, 60)
+
+      // TODO: navigate back to start without hitting any markers
+
+      );
+
+    // Start of a Figure 8
+    RamseteCommand ramseteCommand = createTrajectoryCommand(
+        new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(0)),
+        barrel_path_points,
+        new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(180)));
+    
+    // Run path following command, then stop at the end.
+    return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
+  }
+
+  /**
+   * Figure 8 Autonomous Command
+   * 
+   * @return Command object
+   */
   public Command getAutonomousFigure8Command() {
  
     /// distances are in Meters
@@ -152,6 +201,14 @@ public class RobotContainer {
     return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
   }
 
+  /**
+   * RamseteCommand - generate a path following autonomous driving command.
+   * 
+   * @param startPose where the robot starts
+   * @param translationList list of intermediate points to pass through
+   * @param endPose where the robot stops
+   * @return Command object that executes the path
+   */
   public RamseteCommand createTrajectoryCommand(Pose2d startPose, List<Translation2d> translationList, Pose2d endPose) {
     DifferentialDriveVoltageConstraint autoVoltageConstraint;
     TrajectoryConfig config;
@@ -192,5 +249,15 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     return ramseteCommand;
+  }
+
+  /**
+   * Convert units form inches to meters
+   * 
+   * @param distInches
+   * @return distance in meters
+   */
+  public static double inches2meters(double distInches) {
+    return distInches * 0.0254;
   }
 }
