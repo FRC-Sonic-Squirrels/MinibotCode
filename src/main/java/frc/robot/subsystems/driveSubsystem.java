@@ -127,6 +127,8 @@ public class driveSubsystem extends SubsystemBase {
     Pose2d currentPose = m_odometry.getPoseMeters();
     SmartDashboard.putNumber("pose_x",currentPose.getTranslation().getX());
     SmartDashboard.putNumber("pose_y",currentPose.getTranslation().getY());
+    SmartDashboard.putNumber("pose_x_inches",currentPose.getTranslation().getX() * 39.3701);
+    SmartDashboard.putNumber("pose_y_inches",currentPose.getTranslation().getY() * 39.3701);
     SmartDashboard.putNumber("pose_theta", currentPose.getRotation().getDegrees());
   }
 
