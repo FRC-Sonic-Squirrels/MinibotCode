@@ -146,6 +146,7 @@ public class RobotContainer {
    */
   public Command getAutonomousBarrelCommand(){
 
+    // Tell the odometry know where the robot is starting from and what direction it is pointing.
     Pose2d startPose = new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(0));
     m_drive.resetOdometry(startPose);
 
@@ -184,7 +185,9 @@ public class RobotContainer {
    */
   public Command getAutonomousFigure8Command() {
  
-    /// distances are in Meters
+    // This assumes a start pose of (0,0) angle 0 (where ever the robot starts at)
+
+    // distances are in Meters
     var figure_eight = List.of(
       new Translation2d( 0.5, -0.5),
       new Translation2d( 1.0, -1.0),
