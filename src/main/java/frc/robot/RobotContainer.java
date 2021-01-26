@@ -145,7 +145,10 @@ public class RobotContainer {
    * @return Command object
    */
   public Command getAutonomousBarrelCommand(){
- 
+
+    Pose2d startPose = new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(0));
+    m_drive.resetOdometry(startPose);
+
     // TODO: complete Barrel Auton command and uncomment the next line
 
     // distances are in Meters
@@ -166,9 +169,9 @@ public class RobotContainer {
 
     // Start of a Figure 8
     RamseteCommand ramseteCommand = createTrajectoryCommand(
-        new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(0)),
+        startPose,
         barrel_path_points,
-        new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(180)));
+        new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(Math.PI)));
     
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
