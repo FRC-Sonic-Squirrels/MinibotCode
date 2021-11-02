@@ -16,18 +16,10 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-public static final class DriveConstants {
-    public static final int NEO_1 = 2;
-    public static final int NEO_2 = 1;
-    public static final int k_driveController = 0;
-    public static final int k_operatorController = 1;
-    
-}
-public static final class Manipulator {
-    public static final int TURRET_DRIVE  = 1;
-    public static final int kSoftMaxTurretAngle  = 1;
-    public static final int kSoftMinTurretAngle  = 1;
-    public static final int kTurretRotationsPerTick  = 1;
-
-}
+    public static final class DriveConstants {
+        public static final int NEO_1 = 2;
+        public static final int NEO_2 = 1;
+        public static final int k_driveController = 0;
+        public static final int k_operatorController = 1;
+    }
 }
