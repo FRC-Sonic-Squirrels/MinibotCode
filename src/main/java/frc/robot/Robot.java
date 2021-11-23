@@ -36,12 +36,6 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    autonChooser.addOption("figure 8", "figure8");
-    autonChooser.addOption("AutoNav Barrel", "barrel");
-    autonChooser.addOption("AutoNav Slalom", "slalom");
-    autonChooser.addOption("AutoNav Bounce", "bounce");
-    autonChooser.setDefaultOption("Do Nothing", "nonothing");
-    SmartDashboard.putData("Auto mode", autonChooser);
   }
 
   /**
@@ -77,9 +71,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    String autoName = autonChooser.getSelected();
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand(autoName);
-    
+    m_autonomousCommand = m_robotContainer.chooser.getSelected();
+
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       System.out.println("Scheduling Autonomous Command");

@@ -32,6 +32,9 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
@@ -39,6 +42,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.driveSubsystem;
@@ -59,11 +63,21 @@ public class RobotContainer {
   
   // Commands
 
-  // Other
-   public XboxController m_driverController = new XboxController(OIConstants.kDriverController);
 
+  // Other
+  public XboxController m_driverController = new XboxController(OIConstants.kDriverController);
+  SendableChooser<Command> chooser = new SendableChooser<>();
  
   public RobotContainer() {
+
+
+    chooser.addOption("Figure 8", getAutonomousFigure8Command());
+    chooser.addOption("AutoNav Barrel", getAutonomousBarrelCommand());
+    chooser.addOption("Go Forward 1m", autonCalibrationForward(1.0));
+    chooser.addOption("Go Forward 2m", autonCalibrationForward(2.0));
+    chooser.addOption("Go Back 1m", autonCalibrationForward(-1.0));
+    chooser.setDefaultOption("Do Nothing", getNoAutonomousCommand());
+    SmartDashboard.putData("Auto mode", chooser);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -95,36 +109,7 @@ public class RobotContainer {
     startbutton.whenPressed(() -> m_drive.zeroHeading()); 
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand(String autoName) {
-
-    if (autoName == "donothing") {
-      return getNoAutonomousCommand();
-    }
-    else if (autoName == "figure8") {
-      return getAutonomousFigure8Command();
-    }
-    else if (autoName == "barrel") {
-      return getAutonomousBarrelCommand();
-    }
-    else if (autoName == "slalom") {
-      // TODO: write Slalom Auton command and uncomment the next line
-      // return getAutonomousSlalomCommand();
-    }
-    else if (autoName == "bounce") {
-      // TODO: write Bounce Auton command and uncomment the next line
-      // return getAutonomousBounceCommand();
-    }
-
-    // return do nothing if we don't recognize the choice
-    System.out.println("Warning: No autonomous command specified.");
-    return getNoAutonomousCommand();
-  }
-
+ 
   /**
    * getNoAutonomousCommand() - return a trivial command object that does nothing.
    * 
@@ -138,6 +123,28 @@ public class RobotContainer {
   }
 
 
+ /**
+   * Forward Autonomous Command
+   * 
+   * Return an autonomous command that drives straight for a given distance
+   * in meters.
+   * 
+   * @param distanceInMeters
+   * @return Autonomous Command
+   */
+  public Command autonCalibrationForward(double distanceInMeters) {
+
+    Pose2d startPose = new Pose2d(0.0, 0.0, new Rotation2d(0));
+
+    Command ramseteCommand = createTrajectoryCommand(
+        startPose, 
+        List.of(),
+        new Pose2d(distanceInMeters, 0.0, new Rotation2d(0)),
+        (distanceInMeters < 0.0), 1.5, 0.75);
+
+    // Run path following command, then stop at the end.
+    return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
+  }
 
   /**
    * getAutonomousBarrelCommand - generate Barrel AutoNav Command
@@ -168,11 +175,12 @@ public class RobotContainer {
 
       );
 
-    // Start of a Figure 8
-    RamseteCommand ramseteCommand = createTrajectoryCommand(
+    Command ramseteCommand = createTrajectoryCommand(
         startPose,
         barrel_path_points,
-        new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(Math.PI)));
+        new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(Math.PI)),
+        false,
+        kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared);
     
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
@@ -197,25 +205,30 @@ public class RobotContainer {
       new Translation2d( 0.0, -1.0),
       new Translation2d(-0.5, -0.5));
 
-    // Start of a Figure 8
-    RamseteCommand ramseteCommand = createTrajectoryCommand(
+    Command ramseteCommand = createTrajectoryCommand(
         new Pose2d(0, 0, new Rotation2d(0)),
         figure_eight,
-        new Pose2d(0.0, 0.0, new Rotation2d(0)));
+        new Pose2d(0.0, 0.0, new Rotation2d(0)),
+        false,
+        kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared);
     
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
   }
 
   /**
-   * RamseteCommand - generate a path following autonomous driving command.
+   * createTrajectoryCommand - given a start pose, some intermediate points, and a finish pose, create
+   *     a Ramsete Command to execute the path follow.
    * 
-   * @param startPose where the robot starts
-   * @param translationList list of intermediate points to pass through
-   * @param endPose where the robot stops
-   * @return Command object that executes the path
+   * @param startPose
+   * @param translationList
+   * @param endPose
+   * @param isReversed
+   * @param maxSpeedMetersPerSecond
+   * @param maxAccelerationMetersPerSecondSquared
+   * @return Ramsete Path Follow Command, intake side of robot is isReversed = true and negative values
    */
-  public RamseteCommand createTrajectoryCommand(Pose2d startPose, List<Translation2d> translationList, Pose2d endPose) {
+  public Command createTrajectoryCommand(Pose2d startPose, List<Translation2d> translationList, Pose2d endPose, boolean isReversed, double maxSpeedMetersPerSecond, double maxAccelerationMetersPerSecondSquared) {
     DifferentialDriveVoltageConstraint autoVoltageConstraint;
     TrajectoryConfig config;
   
@@ -223,22 +236,23 @@ public class RobotContainer {
     autoVoltageConstraint = new DifferentialDriveVoltageConstraint(m_drive.getFeedforward(), kDriveKinematics, 6);
 
     // Create config for trajectory
-    config = new TrajectoryConfig(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared)
+    config = new TrajectoryConfig(maxSpeedMetersPerSecond, maxAccelerationMetersPerSecondSquared)
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(kDriveKinematics)
         // Apply the voltage constraint
-        .addConstraint(autoVoltageConstraint);
+        .addConstraint(autoVoltageConstraint)
+        .setReversed(isReversed);
 
-    var initialTime = System.nanoTime();
+    long initialTime = System.nanoTime();
 
     // trajectory to follow. All units in meters.
-    var trajectory = TrajectoryGenerator.generateTrajectory(
+    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
         startPose,
         translationList,
         endPose,
         config);
 
-    RamseteCommand ramseteCommand =
+    Command ramseteCommand =
         new RamseteCommand(trajectory, 
             m_drive::getPose,
             new RamseteController(kRamseteB, kRamseteZeta),
@@ -250,13 +264,15 @@ public class RobotContainer {
             m_drive::tankDriveVolts,
             m_drive);
 
-    var dt = (System.nanoTime() - initialTime) / 1E6;
+    double dt = (System.nanoTime() - initialTime) / 1E6;
     System.out.println("RamseteCommand generation time: " + dt + "ms");
 
     // Run path following command, then stop at the end.
-    return ramseteCommand;
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> m_drive.resetOdometry(trajectory.getInitialPose())),
+        ramseteCommand);
   }
-
+  
   /**
    * Convert units form inches to meters
    * 
