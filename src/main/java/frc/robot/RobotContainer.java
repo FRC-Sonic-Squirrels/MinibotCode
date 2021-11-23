@@ -72,10 +72,12 @@ public class RobotContainer {
 
 
     chooser.addOption("Figure 8", getAutonomousFigure8Command());
-    chooser.addOption("AutoNav Barrel", getAutonomousBarrelCommand());
+    chooser.addOption("Student Path", getAutonomousStudentCommand());
     chooser.addOption("Go Forward 1m", autonCalibrationForward(1.0));
     chooser.addOption("Go Forward 2m", autonCalibrationForward(2.0));
     chooser.addOption("Go Back 1m", autonCalibrationForward(-1.0));
+    chooser.addOption("Curve Left", autonCalibrationCurve(1.0, 1.0));
+    chooser.addOption("Curve Right", autonCalibrationCurve(1.0, -1.0));
     chooser.setDefaultOption("Do Nothing", getNoAutonomousCommand());
     SmartDashboard.putData("Auto mode", chooser);
 
@@ -146,41 +148,74 @@ public class RobotContainer {
     return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
   }
 
+ /**
+   * Curve Autonomous Command
+   *  
+   * Return an autonomous command that drives forward and to the left/right for a given distances
+   * in meters.
+   * 
+   * @param forwardInMeters
+   * @param leftInMeters
+   * @return Autonomous Command
+   */
+  public Command autonCalibrationCurve(double forwardInMeters, double leftInMeters) {
+
+    double rotation = Math.PI/2;
+
+    if (leftInMeters == 0) {
+        rotation = 0;
+    }
+    else if (leftInMeters < 0)  {
+      // turning tp the right
+      rotation = -1.0 * Math.PI / 2.0;
+    }
+
+    Pose2d startPose = new Pose2d(0.0, 0.0, new Rotation2d(0));
+
+    Command ramseteCommand = createTrajectoryCommand(
+        startPose, 
+        List.of(),
+        new Pose2d(forwardInMeters, leftInMeters, new Rotation2d(rotation)),
+        false, 1.5, 0.75);
+
+    // Run path following command, then stop at the end.
+    return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
+  }
+
   /**
-   * getAutonomousBarrelCommand - generate Barrel AutoNav Command
+   * getAutonomousStudentCommand - generate Student AutoNav Command
    * 
    * @return Command object
    */
-  public Command getAutonomousBarrelCommand(){
+  public Command getAutonomousStudentCommand(){
 
     // Tell the odometry know where the robot is starting from and what direction it is pointing.
     Pose2d startPose = new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(0));
     m_drive.resetOdometry(startPose);
 
-    // TODO: complete Barrel Auton command and uncomment the next line
+    // TODO: complete this Auton command and uncomment the next line
 
     // distances are in Meters
-    var barrel_path_points = List.of(
+    var path_points = List.of(
       // navigate around first barrel, centered at D5 (150,60)
+      // or, change these to whatever you want
       new Translation2d( inches2meters(150), inches2meters(90)),
       new Translation2d( inches2meters(180), inches2meters(60)),
       new Translation2d( inches2meters(150), inches2meters(30)),
       new Translation2d( inches2meters(120), inches2meters(60))
 
-      // TODO: navigate around B8  (240, 120)
-
-      // TODO: navigate around D10 (300, 60)
-
-      // TODO: navigate back to start without hitting any markers
+      // TODO: add more points to navigate to
 
       );
 
     Command ramseteCommand = createTrajectoryCommand(
         startPose,
-        barrel_path_points,
+        path_points,
         new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(Math.PI)),
-        false,
-        kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared);
+        false,  // not driving backwards
+        kMaxSpeedMetersPerSecond, // maximum speed
+        kMaxAccelerationMetersPerSecondSquared  // maximum acceleration
+        );
     
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
