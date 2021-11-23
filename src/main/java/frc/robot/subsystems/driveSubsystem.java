@@ -269,8 +269,12 @@ public class driveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from 180 to 180
    */
   public double getHeading() {
-    // TODO: test if fused heading m_gyro.getFusedHeading() is better
+    // According to https://pdocs.kauailabs.com/navx-mxp/guidance/yaw-drift/
+    // it is easier to use getAngle() instead of m_gyro.getFusedHeading() because it
+    // does not require calibrating the magnetometer. Once motors are energized compass
+    // readings are unreliable.
     // return m_gyro.getFusedHeading() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+
     return Math.IEEEremainder(m_gyro.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
