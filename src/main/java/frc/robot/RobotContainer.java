@@ -190,10 +190,7 @@ public class RobotContainer {
   public Command getAutonomousStudentCommand(){
 
     // Tell the odometry know where the robot is starting from and what direction it is pointing.
-    Pose2d startPose = new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(0));
-    m_drive.resetOdometry(startPose);
-
-    // TODO: complete this Auton command and uncomment the next line
+    Pose2d startPose = new Pose2d(0.0, 0.0, new Rotation2d(0));
 
     // distances are in Meters
     var path_points = List.of(
@@ -302,7 +299,10 @@ public class RobotContainer {
     double dt = (System.nanoTime() - initialTime) / 1E6;
     System.out.println("RamseteCommand generation time: " + dt + "ms");
 
-    // Run path following command, then stop at the end.
+    // First reset odometry so robot starts from the starting point, this prevents
+    // accidents when the robot's odometric state is different from the 
+    // start point. Either because the robot has driven around before running
+    // autonomous, or the start point is not (0,0,0).
     return new SequentialCommandGroup(
         new InstantCommand(() -> m_drive.resetOdometry(trajectory.getInitialPose())),
         ramseteCommand);
