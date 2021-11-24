@@ -194,22 +194,26 @@ public class RobotContainer {
 
     // distances are in Meters
     var path_points = List.of(
-      // navigate around first barrel, centered at D5 (150,60)
-      // or, change these to whatever you want
-      new Translation2d( inches2meters(150), inches2meters(90)),
-      new Translation2d( inches2meters(180), inches2meters(60)),
-      new Translation2d( inches2meters(150), inches2meters(30)),
-      new Translation2d( inches2meters(120), inches2meters(60))
+      // a serpentine pattern
+      new Translation2d( inches2meters(12), inches2meters(12)),
+      new Translation2d( inches2meters(24), inches2meters(0)),
+      new Translation2d( inches2meters(36), inches2meters(-12))
 
       // TODO: add more points to navigate to
 
       );
 
+    // where the robot will end up
+    // WARNING: make sure this is reasonably close to the last point in your list
+    //     if it's really far away, the robot can display some wild driving
+    //     trying to get there.
+    Pose2d endPose = new Pose2d(inches2meters(48), inches2meters(0), new Rotation2d(0));
+
     Command ramseteCommand = createTrajectoryCommand(
         startPose,
         path_points,
-        new Pose2d(inches2meters(50), inches2meters(90), new Rotation2d(Math.PI)),
-        false,  // not driving backwards
+        endPose,
+        false,   // not driving backwards, ie robot is driving forward
         kMaxSpeedMetersPerSecond, // maximum speed
         kMaxAccelerationMetersPerSecondSquared  // maximum acceleration
         );
