@@ -15,9 +15,10 @@
     "**/*~": true
   },
   "cSpell.words": [
-    "Smartdashboard",
     "donothing",
     "nonothing",
+    "odometric",
+    "Smartdashboard",
     "startbutton",
     "teleoperated",
     "ybutton"
