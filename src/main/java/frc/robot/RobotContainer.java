@@ -195,10 +195,13 @@ public class RobotContainer {
     // distances are in Meters
     var path_points = List.of(
       // a serpentine pattern
-      new Translation2d( inches2meters(12), inches2meters(12)),
-      new Translation2d( inches2meters(24), inches2meters(0)),
-      new Translation2d( inches2meters(36), inches2meters(-12))
-
+      new Translation2d( 0 , 1),
+      new Translation2d( -1 , 1),
+      new Translation2d( -1, 0),
+      new Translation2d( 0, 0),
+      new Translation2d( -0.5, 1),
+      new Translation2d( -1, 0),
+      new Translation2d( 0, 0)
       // TODO: add more points to navigate to
 
       );
@@ -207,7 +210,7 @@ public class RobotContainer {
     // WARNING: make sure this is reasonably close to the last point in your list
     //     if it's really far away, the robot can display some wild driving
     //     trying to get there.
-    Pose2d endPose = new Pose2d(inches2meters(48), inches2meters(0), new Rotation2d(0));
+    Pose2d endPose = new Pose2d( 0 , 0 , new Rotation2d(0));
 
     Command ramseteCommand = createTrajectoryCommand(
         startPose,
