@@ -193,6 +193,18 @@ public class RobotContainer {
     Pose2d startPose = new Pose2d(0.0, 0.0, new Rotation2d(0));
 
     // distances are in Meters
+    
+    // expected result 
+    // square first then triangle inside the square
+    /*
+      |------------------|
+      |         _        | 
+      |       _   _      |
+      |     _       _    |  
+      |   _           _  |
+      | _________________| 
+      |------------------|
+    */
     var path_points = List.of(
       // a serpentine pattern
       new Translation2d( 0 , 1),
