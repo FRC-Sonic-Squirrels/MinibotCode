@@ -190,31 +190,18 @@ public class RobotContainer {
   public Command getAutonomousStudentCommand(){
 
     // Tell the odometry know where the robot is starting from and what direction it is pointing.
-    Pose2d startPose = new Pose2d(0.0, 0.0, new Rotation2d(0));
+    Pose2d startPose = new Pose2d(0.0, 0.0, new Rotation2d(Math.PI/2));
 
     // distances are in Meters
     
     // expected result 
     // square first then triangle inside the square
-    /*
-      |------------------|
-      |         _        | 
-      |       _   _      |
-      |     _       _    |  
-      |   _           _  |
-      | _________________| 
-      |------------------|
-    */
+    
     var path_points = List.of(
       // a serpentine pattern
-      new Translation2d( 0 , 1),
-      new Translation2d( -1 , 1),
-      new Translation2d( -1, 0),
-      new Translation2d( 0, 0),
-      new Translation2d( -0.5, 1),
-      new Translation2d( -1, 0),
-      new Translation2d( 0, 0)
-      // TODO: add more points to navigate to
+      new Translation2d( 0, 4),
+      new Translation2d( 1, 2)
+ 
 
       );
 
@@ -222,15 +209,15 @@ public class RobotContainer {
     // WARNING: make sure this is reasonably close to the last point in your list
     //     if it's really far away, the robot can display some wild driving
     //     trying to get there.
-    Pose2d endPose = new Pose2d( 0 , 0 , new Rotation2d(0));
+    Pose2d endPose = new Pose2d( 0 , 0 , new Rotation2d(3 * Math.PI / 2));
 
     Command ramseteCommand = createTrajectoryCommand(
         startPose,
         path_points,
         endPose,
         false,   // not driving backwards, ie robot is driving forward
-        kMaxSpeedMetersPerSecond, // maximum speed
-        kMaxAccelerationMetersPerSecondSquared  // maximum acceleration
+        0.75, // maximum speed
+        0.4  // maximum acceleration
         );
     
     // Run path following command, then stop at the end.
