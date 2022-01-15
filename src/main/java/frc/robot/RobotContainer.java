@@ -45,7 +45,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     final JoystickButton ybutton = new JoystickButton(m_driveController, Button.kY.value);
   
-    ybutton.whenPressed(() -> m_colorSensor.senseColorWheelPos(), m_colorSensor);
+    ybutton.whenPressed(() -> m_colorSensor.senseCargoColor(), m_colorSensor);
   }
 
 

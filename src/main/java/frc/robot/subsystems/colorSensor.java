@@ -17,29 +17,21 @@ import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
 
 public class colorSensor extends SubsystemBase {
-  // space for variables
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
   private final ColorMatch m_colorMatcher = new ColorMatch();
-  private String lastSeenColor = "Unknown";
-  private int count = 0;
-
+ 
   /*
-   * Color Wheel Blue CMY: 100,0,0 RGB: #00FFFF Green CMY: 100,0,100 RGB: #00FF00
-   * Red CMY: 0,100,100 RGB: #FF0000 Yellow CMY: 0,0,100 RGB: #FFFF00
+   * TODO: determine exact CMY and RGB colors for cargo. 
    */
   private final Color kBlueTarget = ColorMatch.makeColor(0.0, 0.5, 0.5);
-  //private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
   private final Color kRedTarget = ColorMatch.makeColor(0.5454, 0.0908, 0.36352);
-  //private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-
+  
   public colorSensor() {
     // colors we want to match
     m_colorMatcher.addColorMatch(kBlueTarget);
-    //m_colorMatcher.addColorMatch(kGreenTarget);
     m_colorMatcher.addColorMatch(kRedTarget);
-    //m_colorMatcher.addColorMatch(kYellowTarget);
-
+    
     SmartDashboard.putNumber("Red", 0.0);
     SmartDashboard.putNumber("Green", 0.0);
     SmartDashboard.putNumber("Blue", 0.0);
@@ -47,18 +39,12 @@ public class colorSensor extends SubsystemBase {
     SmartDashboard.putString("Detected Color", "Initializing");
   }
 
+  
+  // TODO: What happens if there is no cargo in front of the sensor? 
   /**
-   * Reset color and rotation count for color wheel.
+   * Run cargo sensor, red or blue
    */
-  public void reset() {
-    count = 0;
-    SmartDashboard.putNumber("Count", count);
-  }
-
-  /**
-   * Run color wheel sensor, track position.
-   */
-  public void senseColorWheelPos() {
+  public void senseCargoColor() {
     // This method will be called once per scheduler run
     Color detectedColor = m_colorSensor.getColor();
 
@@ -70,14 +56,8 @@ public class colorSensor extends SubsystemBase {
 
     if (match.color == kBlueTarget) {
       colorString = "Blue";
-    } else if (match.color == kRedTarget) {
+    } else {
       colorString = "Red";
-    // } else if (match.color == kGreenTarget) {
-    //   colorString = "Green";
-    // } else if (match.color == kYellowTarget) {
-    //   colorString = "Yellow";
-    // } else {
-    //   colorString = "Unknown";
     }
 
     SmartDashboard.putNumber("Red", detectedColor.red);
@@ -85,54 +65,8 @@ public class colorSensor extends SubsystemBase {
     SmartDashboard.putNumber("Blue", detectedColor.blue);
     SmartDashboard.putNumber("Confidence", match.confidence);
     SmartDashboard.putString("Detected Color", colorString);
-    SmartDashboard.putNumber("Count", 0);
-
+  
     int proximity = m_colorSensor.getProximity();
     SmartDashboard.putNumber("Proximity", proximity);
-
-    /* Code for counting colors */
-
-    // if (lastSeenColor.equals("Red")) {
-    //   if (colorString.equals("Green")) {
-    //     count = count + 1;
-    //   }
-    //   if (colorString.equals("Yellow")) {
-    //     count = count - 1;
-    //   }
-    // } else if (lastSeenColor.equals("Green")) {
-    //   if (colorString.equals("Blue")) {
-    //     count = count + 1;
-    //   }
-    //   if (colorString.equals("Red")) {
-    //     count = count - 1;
-    //   }
-    // } else if (lastSeenColor.equals("Blue")) {
-    //   if (colorString.equals("Yellow")) {
-    //     count = count + 1;
-    //   }
-    //   if (colorString.equals("Green")) {
-    //     count = count - 1;
-    //   }
-    // } else if (lastSeenColor.equals("Yellow")) {
-    //   if (colorString.equals("Red")) {
-    //     count = count + 1;
-    //   }
-    //   if (colorString.equals("Blue")) {
-    //     count = count - 1;
-    //   }
-    // }
-
-    // TODO: remove debug print
-    if (!lastSeenColor.equals(colorString)) {
-      System.out.println("lastSeen: " + lastSeenColor + " -> " + colorString);
-      System.out.println("Color Change Count: " + count);
-    }
-
-    // Color reset and count display on SmartDashboard
-    lastSeenColor = colorString;
-    SmartDashboard.putNumber("Count", count);
-
-    // TODO: Detect errors and unknown colors
-
   }
 }
