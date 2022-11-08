@@ -13,9 +13,9 @@ import frc.robot.Constants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 public class driveSubsystem extends SubsystemBase {
   /**
@@ -23,16 +23,16 @@ public class driveSubsystem extends SubsystemBase {
    */
   public static final CANSparkMax neo1 = new CANSparkMax(Constants.DriveConstants.NEO_1, MotorType.kBrushless);
   public static final CANSparkMax neo2 = new CANSparkMax(Constants.DriveConstants.NEO_2, MotorType.kBrushless);
-  public static SpeedController leftSide;
-  public static SpeedController rightSide;
+  public static MotorController leftSide;
+  public static MotorController rightSide;
   public static DifferentialDrive drive;
 
   public driveSubsystem() {
     // set all NEOs to factory defaults
     neo1.restoreFactoryDefaults();
     neo2.restoreFactoryDefaults();
-    leftSide = new SpeedControllerGroup(neo1);
-    rightSide = new SpeedControllerGroup(neo2);
+    leftSide = new MotorControllerGroup(neo1);
+    rightSide = new MotorControllerGroup(neo2);
     drive = new DifferentialDrive(leftSide, rightSide);
   }
   
