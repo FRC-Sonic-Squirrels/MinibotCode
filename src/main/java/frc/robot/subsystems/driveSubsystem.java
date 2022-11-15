@@ -19,20 +19,33 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 public class DriveSubsystem extends SubsystemBase {
   /**
-   * Creates a new ExampleSubsystem.
+   * Class variables for storing data and objects that this subsystem needs to
+   * operate.
+   *
+   * These variables are declared private to this class, because no other object
+   * should need direct access to these objects. Any changes or commands to the 
+   * drivetrain should come through public methods like the tankDrive() function.
    */
-  public static final CANSparkMax neo1 = new CANSparkMax(Constants.DriveConstants.NEO_1, MotorType.kBrushless);
-  public static final CANSparkMax neo2 = new CANSparkMax(Constants.DriveConstants.NEO_2, MotorType.kBrushless);
-  public static MotorController leftSide;
-  public static MotorController rightSide;
-  public static DifferentialDrive drive;
+
+  private static CANSparkMax leftNEO;
+  private static CANSparkMax rightNEO;
+  private static MotorController leftSide;
+  private static MotorController rightSide;
+  private static DifferentialDrive drive;
 
   public DriveSubsystem() {
+    leftNEO = new CANSparkMax(Constants.DriveConstants.LEFT_NEO_CANID, MotorType.kBrushless);
+    rightNEO = new CANSparkMax(Constants.DriveConstants.RIGHT_NEO_CANID, MotorType.kBrushless);
+   
     // set all NEOs to factory defaults
-    neo1.restoreFactoryDefaults();
-    neo2.restoreFactoryDefaults();
-    leftSide = new MotorControllerGroup(neo1);
-    rightSide = new MotorControllerGroup(neo2);
+    leftNEO.restoreFactoryDefaults();
+    rightNEO.restoreFactoryDefaults();
+
+    // assign each motor to a MotorControllerGroup
+    leftSide = new MotorControllerGroup(leftNEO);
+    rightSide = new MotorControllerGroup(rightNEO);
+
+    // create our DifferentialDrive class
     drive = new DifferentialDrive(leftSide, rightSide);
   }
   
@@ -40,6 +53,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
   public void arcadeDrive(double xSpeed, double zRotation) {
     drive.arcadeDrive(xSpeed, zRotation);
   }

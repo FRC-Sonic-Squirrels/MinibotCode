@@ -98,12 +98,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    if (RobotContainer.m_operatorController.getStartButtonPressed() && manualMode == false) {
-			manualMode = true;
-    }	
-    else if (RobotContainer.m_operatorController.getStartButtonPressed() && manualMode == true){
-			manualMode = false;
-    }	
   }
 
   @Override

@@ -17,9 +17,8 @@ package frc.robot;
  */
 public final class Constants {
     public static final class DriveConstants {
-        public static final int NEO_1 = 2;
-        public static final int NEO_2 = 1;
-        public static final int k_driveController = 0;
-        public static final int k_operatorController = 1;
+        public static final int LEFT_NEO_CANID = 2;
+        public static final int RIGHT_NEO_CANID = 1;
+        public static final int DRIVECONTROLLER_ID = 0;
     }
 }
