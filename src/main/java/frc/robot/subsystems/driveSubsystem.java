@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
-public class driveSubsystem extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
    */
@@ -27,7 +27,7 @@ public class driveSubsystem extends SubsystemBase {
   public static MotorController rightSide;
   public static DifferentialDrive drive;
 
-  public driveSubsystem() {
+  public DriveSubsystem() {
     // set all NEOs to factory defaults
     neo1.restoreFactoryDefaults();
     neo2.restoreFactoryDefaults();
