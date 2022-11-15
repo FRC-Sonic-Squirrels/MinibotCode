@@ -9,24 +9,26 @@ package frc.robot.commands;
 
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * An example command that uses an example subsystem.
  */
 public class DriveCommand extends CommandBase {
-  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final DriveSubsystem m_driveSubsystem;
+  private DriveSubsystem m_driveSubsystem;
+  private XboxController m_driveController;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveCommand(DriveSubsystem subsystem) {
-    m_driveSubsystem = subsystem;
+  public DriveCommand(DriveSubsystem driveSubsystem, XboxController driveController) {
+    m_driveSubsystem = driveSubsystem;
+    m_driveController = driveController;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
