@@ -8,7 +8,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 /**
@@ -22,7 +21,6 @@ public class Robot extends TimedRobot {
   public static boolean manualMode = false;
 
   private RobotContainer m_robotContainer;
-  public static final Ultrasonic sensor = new Ultrasonic(1,2);
 
   /**
    * This function is run when the robot is first started up and should be used for any
