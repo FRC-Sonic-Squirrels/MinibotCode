@@ -47,7 +47,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    new Button(m_driveController::getRightBumperPressed).whenPressed(new Spin(m_spinner));
+    new Button(m_driveController::getRightBumperPressed).toggleWhenPressed(new Spin(m_spinner));
 
   }
 
