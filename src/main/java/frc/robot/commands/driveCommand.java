@@ -7,22 +7,16 @@
 
 package frc.robot.commands;
 
-import frc.robot.RobotContainer;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/**
- * An example command that uses an example subsystem.
- */
 public class DriveCommand extends CommandBase {
   private DriveSubsystem m_driveSubsystem;
   private XboxController m_driveController;
 
   /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * Creates a new DriveCommand.
    */
   public DriveCommand(DriveSubsystem driveSubsystem, XboxController driveController) {
     m_driveSubsystem = driveSubsystem;
@@ -39,7 +33,7 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_driveSubsystem.arcadeDrive(RobotContainer.m_driveController.getLeftY(), RobotContainer.m_driveController.getRightX());
+    m_driveSubsystem.arcadeDrive(m_driveController.getLeftY(), m_driveController.getRightX());
   }
 
   // Called once the command ends or is interrupted.
