@@ -10,16 +10,18 @@ import frc.robot.subsystems.Spinner;
 public class Spin extends CommandBase {
   /** Creates a new Spin. */
   private Spinner m_spinner;
+  private double m_percent = 0.5;
 
-  public Spin(Spinner spinner) {
+  public Spin(Spinner spinner, double percent) {
     m_spinner = spinner;
+    m_percent = percent;
     addRequirements(spinner);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_spinner.setPercentOutput(0.1);
+    m_spinner.setPercentOutput(m_percent);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
