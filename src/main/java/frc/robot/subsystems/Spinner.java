@@ -22,12 +22,12 @@ public class Spinner extends SubsystemBase {
   }
 
   public void setPercentOutput(double speed) {
-    if (speed > 0.2) {
-      speed = 0.2;
+    if (speed > 1.0) {
+      speed = 1.0;
     }
-    if ( speed < -0.2) {
-      speed = -0.2;
+    if ( speed < -1.0) {
+      speed = -1.0;
     }
-    spinnerMotor.set(speed);
+    spinnerMotor.set(speed * 0.2);
   }
 }
