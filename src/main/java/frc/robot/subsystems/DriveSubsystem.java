@@ -35,17 +35,17 @@ import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants.DriveConstants;
 
 
-public class driveSubsystem extends SubsystemBase {
-  private static final CANSparkMax m_leftNEO =
+public class DriveSubsystem extends SubsystemBase {
+  private CANSparkMax m_leftNEO =
       new CANSparkMax(DriveConstants.kLeftNEO, MotorType.kBrushless);
-  private static final CANSparkMax m_rightNEO =
+  private CANSparkMax m_rightNEO =
       new CANSparkMax(DriveConstants.kRightNEO, MotorType.kBrushless);
-  private static SpeedController m_leftMotors;
-  private static SpeedController m_rightMotors;
-  private final DifferentialDrive m_drive;
-  private final CANEncoder m_leftEncoder;
-  private final CANEncoder m_rightEncoder;
-  private final SimpleMotorFeedforward  m_feedforward = 
+  private SpeedController m_leftMotors;
+  private SpeedController m_rightMotors;
+  private DifferentialDrive m_drive;
+  private CANEncoder m_leftEncoder;
+  private CANEncoder m_rightEncoder;
+  private SimpleMotorFeedforward  m_feedforward = 
       new SimpleMotorFeedforward(ksVolts, kvVoltSecondsPerMeter, kaVoltSecondsSquaredPerMeter);
 
   private PIDController left_PIDController = new PIDController(kPDriveVel, 0.0, kDDriveVel);
@@ -56,14 +56,14 @@ public class driveSubsystem extends SubsystemBase {
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   // Odometry class for tracking robot pose
-  private final DifferentialDriveOdometry m_odometry;
+  private DifferentialDriveOdometry m_odometry;
 
   /**
    * driveSubsystem constructor
    * 
    * uses NEOs and implements odometry
    */
-  public driveSubsystem() {
+  public DriveSubsystem() {
     // set all NEOs to factory defaults
     m_leftNEO.restoreFactoryDefaults();
     m_rightNEO.restoreFactoryDefaults();

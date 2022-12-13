@@ -45,7 +45,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.driveSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -59,7 +59,7 @@ public class RobotContainer {
    */
 
   // Subsystems
-  private final driveSubsystem m_drive = new driveSubsystem();
+  private final DriveSubsystem m_drive = new DriveSubsystem();
   
   // Commands
 
