@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -27,11 +28,18 @@ public class DriveSubsystem extends SubsystemBase {
    * drivetrain should come through public methods like the tankDrive() function.
    */
 
-  private static CANSparkMax leftNEO;
-  private static CANSparkMax rightNEO;
-  private static MotorController leftSide;
-  private static MotorController rightSide;
-  private static DifferentialDrive drive;
+  private CANSparkMax leftNEO;
+  private  CANSparkMax rightNEO;
+
+  private RelativeEncoder m_leftEncoder;
+  private RelativeEncoder m_rightEncoder;
+
+  private  MotorController leftSide;
+  private  MotorController rightSide;
+  private  DifferentialDrive drive;
+
+  private double GEARRATIO = 1/18; 
+  private double ROTATIONS_TO_INCHES = GEARRATIO * (6 * Math.PI);
 
   public DriveSubsystem() {
     leftNEO = new CANSparkMax(Constants.DriveConstants.LEFT_NEO_CANID, MotorType.kBrushless);
@@ -40,6 +48,9 @@ public class DriveSubsystem extends SubsystemBase {
     // set all NEOs to factory defaults
     leftNEO.restoreFactoryDefaults();
     rightNEO.restoreFactoryDefaults();
+
+    m_leftEncoder = leftNEO.getEncoder();
+    m_rightEncoder = rightNEO.getEncoder();
 
     // assign each motor to a MotorControllerGroup
     leftSide = new MotorControllerGroup(leftNEO);
@@ -60,5 +71,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
     drive.tankDrive(leftSpeed, rightSpeed);
+  }
+
+  public double getDistanceInches(){
+    double leftValue = m_leftEncoder.getPosition() * ROTATIONS_TO_INCHES;
+    double rightValue = m_rightEncoder.getPosition() * ROTATIONS_TO_INCHES;
+
+    double averageValue = (leftValue + rightValue) / 2;
+
+    return averageValue;
   }
 }
