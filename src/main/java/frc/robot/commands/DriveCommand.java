@@ -12,8 +12,8 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class DriveCommand extends CommandBase {
-  private DriveSubsystem m_driveSubsystem;
-  private XboxController m_driveController;
+  private final DriveSubsystem m_driveSubsystem;
+  private final XboxController m_driveController;
 
   /**
    * Creates a new DriveCommand.

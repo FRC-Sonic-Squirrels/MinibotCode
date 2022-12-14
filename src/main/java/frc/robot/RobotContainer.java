@@ -21,18 +21,18 @@ import frc.robot.subsystems.DriveSubsystem;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
 
-  /**
+    /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
-  public static XboxController m_driveController = new XboxController(DriveConstants.DRIVECONTROLLER_ID);
+  public static final XboxController m_driveController = new XboxController(DriveConstants.DRIVECONTROLLER_ID);
 
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    m_driveSubsystem.setDefaultCommand(new DriveCommand(m_driveSubsystem, m_driveController));
+      // The robot's subsystems and commands are defined here...
+      DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+      m_driveSubsystem.setDefaultCommand(new DriveCommand(m_driveSubsystem, m_driveController));
   }
 
   /**
@@ -47,13 +47,9 @@ public class RobotContainer {
 
 
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
+  /*
+    Use this to pass the autonomous command to the main {@link Robot} class.
+
+    @return the command to run in autonomous
    */
-  /*public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    //return m_autoCommand;
-  }*/
 }
