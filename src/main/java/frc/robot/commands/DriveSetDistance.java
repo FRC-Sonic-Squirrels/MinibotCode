@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DriveSetDistance extends CommandBase {
   /** Creates a new DriveSetDistance. */
 
-  //WE need 
+  //WE need:
   //drivetrain 
   //target 
   //speed to travel at
@@ -21,13 +21,19 @@ public class DriveSetDistance extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //Set the speed to something low 
-    //10% maybe 
+     
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    //Set the speed to something low 
+    //10% maybe 
+    //note: we need to put this in execute insted of initialize because 
+    //we need to constantly tell the motor what to do because 
+    //if we dont give it an instruction for long enough it triggers motor safety 
+    //which is a protection system to make sure motors are always update in a periodic manner 
+  }
 
   // Called once the command ends or is interrupted.
   @Override
