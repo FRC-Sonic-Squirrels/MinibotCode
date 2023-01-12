@@ -1,5 +1,5 @@
 # MinibotCode
 
-Code for use with FRC Team 2930's programming testbeds, with brushless NEO motors.
+**STOP. Don't use this.** This project is **DEPRICATED** please use the Minibot2023 project.
 
-This branch uses the 2022 command-based framework.
+This project started several years ago and after several iterations of WPILib version imports and many different coders, the code just got too ugly. Better to start fresh.
